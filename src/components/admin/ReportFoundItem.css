@@ -1,0 +1,277 @@
+.reportfound-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.reportfound-form-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportfound-form-header {
+  background: #2b5797;
+  padding: 42px 40px;
+  color: white;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportfound-header-icon {
+  width: 64px;
+  height: 60px;
+  object-fit: contain;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+}
+
+.reportfound-title {
+  text-align: left;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  margin: 0 0 12px 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportfound-subtitle-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportfound-subtitle-label {
+  background-color: white;
+  font-size: 0.5rem;
+  font-weight: bold;
+  color: black;
+  letter-spacing: 1px;
+  border: white;
+  padding: 0.5px 6px;
+  border-radius: 13px;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportfound-subtitle-text {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportfound-form-body {
+  padding: 32px;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportfound-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px 32px;
+}
+
+.reportfound-form-group {
+  margin-bottom: 0;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportfound-full-width {
+  grid-column: span 2;
+}
+
+.reportfound-form-group label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: #333;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportfound-form-group input,
+.reportfound-form-group select,
+.reportfound-form-group textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  background: white;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
+}
+
+.reportfound-form-group input:focus,
+.reportfound-form-group select:focus,
+.reportfound-form-group textarea:focus {
+  outline: none;
+  border-color: #2b5797;
+  box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.1);
+}
+
+.reportfound-photo-upload-area {
+  border: 1px dashed #ccc;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  background: #fafafa;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportfound-photo-upload-area:hover {
+  border-color: #2b5797;
+  background: #f1f8e9;
+}
+
+.reportfound-upload-icon {
+  font-size: 40px;
+  margin-bottom: 8px;
+}
+
+.reportfound-photo-upload-area p {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 4px 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportfound-upload-hint {
+  font-size: 0.7rem;
+  color: #999;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportfound-selected-file {
+  margin-top: 12px;
+  padding: 8px;
+  background: #e8f5e9;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: #2b5797;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportfound-form-buttons {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportfound-submit-btn {
+  flex: 1;
+  background: #2b5797;
+  color: white;
+  border: none;
+  padding: 14px 20px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportfound-submit-btn:hover {
+  background: #1e3a5f;
+}
+
+.reportfound-cancel-btn {
+  flex: 0.3;
+  background: white;
+  color: #666;
+  border: 1px solid #ddd;
+  padding: 14px 20px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportfound-cancel-btn:hover {
+  background: #f8f9fa;
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+@media (max-width: 768px) {
+  .reportfound-page {
+    margin: 0 16px;
+    max-width: 100%;
+    padding: 0;
+  }
+  
+  .reportfound-form-header {
+    padding: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .reportfound-header-icon {
+    font-size: 1.5rem;
+  }
+  
+  .reportfound-title {
+    font-size: 1.2rem;
+  }
+  
+  .reportfound-subtitle-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .reportfound-form-body {
+    padding: 20px;
+  }
+  
+  .reportfound-form-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .reportfound-full-width {
+    grid-column: span 1;
+  }
+  
+  .reportfound-form-buttons {
+    flex-direction: column;
+  }
+  
+  .reportfound-cancel-btn {
+    flex: 1;
+  }
+}
+.reportfound-loading {
+  margin-top: 10px;
+  color: #2b5797;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.reportfound-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

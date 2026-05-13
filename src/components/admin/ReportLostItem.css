@@ -1,0 +1,301 @@
+.reportlost-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.reportlost-back-arrow {
+  background: none;
+  border: none;
+  font-size: 0.9rem;
+  color: #2b5797;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 16px;
+  font-weight: 500;
+  display: block;
+  text-align: left;
+  width: fit-content;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportlost-back-arrow:hover {
+  text-decoration: underline;
+}
+
+.reportlost-form-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportlost-form-header {
+  background: #2b5797;
+  padding: 42px 40px;
+  color: white;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportlost-header-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+}
+
+.reportlost-header-icon {
+  width: 64px;
+  height: 60px;
+}
+
+.reportlost-title {
+  text-align: left;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  margin: 0 0 12px 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportlost-subtitle-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportlost-subtitle-label {
+  background-color: white;
+  font-size: 0.5rem;
+  font-weight: bold;
+  color: black;
+  letter-spacing: 1px;
+  border: white;
+  padding: 0.5px 6px;
+  border-radius: 13px;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportlost-subtitle-text {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportlost-form-body {
+  padding: 32px;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportlost-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px 32px;
+}
+
+.reportlost-form-group {
+  margin-bottom: 0;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportlost-full-width {
+  grid-column: span 2;
+}
+
+.reportlost-form-group label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: #333;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportlost-form-group input,
+.reportlost-form-group select,
+.reportlost-form-group textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  background: white;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
+}
+
+.reportlost-form-group input:focus,
+.reportlost-form-group select:focus,
+.reportlost-form-group textarea:focus {
+  outline: none;
+  border-color: black;
+  box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.1);
+}
+
+.reportlost-photo-upload-area {
+  border: 1px dashed #ccc;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  background: #fafafa;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportlost-photo-upload-area:hover {
+  border-color: black;
+  background: #f1f8e9;
+}
+
+.reportlost-upload-icon {
+  font-size: 40px;
+  margin-bottom: 8px;
+}
+
+.reportlost-photo-upload-area p {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 4px 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportlost-upload-hint {
+  font-size: 0.7rem;
+  color: #999;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportlost-selected-file {
+  margin-top: 12px;
+  padding: 8px;
+  background: #e8f5e9;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: #2b5797;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportlost-form-buttons {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportlost-submit-btn {
+  flex: 1;
+  background: #2b5797;
+  color: white;
+  border: none;
+  padding: 14px 20px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportlost-submit-btn:hover {
+  background: #1e3a5f;
+}
+
+.reportlost-cancel-btn {
+  flex: 0.3;
+  background: white;
+  color: #666;
+  border: 1px solid #ddd;
+  padding: 14px 20px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.reportlost-cancel-btn:hover {
+  background: #f8f9fa;
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+@media (max-width: 768px) {
+  .reportlost-page {
+    margin: 0 16px;
+    max-width: 100%;
+    padding: 0;
+  }
+  
+  .reportlost-form-header {
+    padding: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .reportlost-header-icon {
+    font-size: 1.5rem;
+  }
+  
+  .reportlost-title {
+    font-size: 1.2rem;
+  }
+  
+  .reportlost-subtitle-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .reportlost-form-body {
+    padding: 20px;
+  }
+  
+  .reportlost-form-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .reportlost-full-width {
+    grid-column: span 1;
+  }
+  
+  .reportlost-form-buttons {
+    flex-direction: column;
+  }
+  
+  .reportlost-cancel-btn {
+    flex: 1;
+  }
+}
+.reportlost-loading {
+  margin-top: 10px;
+  color: #2b5797;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.reportlost-submit-btn:disabled{
+  opacity: 0.6;
+  cursor: not-allowed;
+}

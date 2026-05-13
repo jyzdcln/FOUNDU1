@@ -1,0 +1,426 @@
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.popup-overlay.closing {
+  animation: fadeOut 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.popup-container {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  padding: 30px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  animation: slideIn 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.popup-container.closing {
+  animation: slideOut 0.3s ease forwards;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.popup-header h2 {
+  margin: 0;
+  color: #000000;
+  font-size: 24px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 38px;
+  cursor: pointer;
+  color: black;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.close-btn:hover {
+  color: #000000;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: black;
+  font-weight: 600;
+  font-size: 15px;
+  text-align: left;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #1a2639;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background: #2b5797;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.submit-btn:hover {
+  background: #506f9c;
+}
+
+.error-message {
+  color: #ff4444;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 14px;
+  text-align: center;
+  animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.login-options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.office365-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  background: #2b5797;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.office365-btn:hover {
+  background: #506f9c;
+}
+
+.office-icon {
+  font-size: 20px;
+}
+
+.admin-link {
+  background: none;
+  border: 2px solid rgb(230, 230, 230);
+  color: black;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 30px;
+  transition: all 0.2s;
+  font-weight: 500;
+  text-align: center;
+}
+
+.admin-link:hover {
+  background: rgb(230, 230, 230);
+  color: black;
+}
+
+.back-btn {
+  background: rgb(41, 41, 41);
+  border: transparent;
+  color: rgb(228, 228, 228);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 10px;
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-weight: 500;
+  width: 100%;
+  border-radius: 8px;
+}
+
+.back-btn:hover {
+  background-color: rgb(24, 24, 24);
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.remember-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: #000000;
+  font-weight: 500;
+}
+
+.remember-checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.forgot-password-link {
+  background: none;
+  border: none;
+  color: #2b5797;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+  padding: 0;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.forgot-password-link:hover {
+  color: #1a3f6e;
+  text-decoration: underline;
+}
+
+.form-switch-wrapper {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.form-switch-wrapper.switching {
+  animation: switchFade 0.2s ease-in-out;
+}
+
+@keyframes switchFade {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.login-options,
+form {
+  animation: contentFadeIn 0.3s ease;
+  transition: all 0.2s ease;
+}
+
+@keyframes contentFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .popup-container {
+    width: 95%;
+    padding: 25px;
+  }
+  .popup-header h2 {
+    font-size: 20px;
+  }
+  .form-group label {
+    font-size: 14px;
+  }
+  .form-group input {
+    padding: 10px;
+  }
+  .office365-btn, .admin-link {
+    font-size: 14px;
+    padding: 10px;
+  }
+  .submit-btn, .back-btn {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .popup-container {
+    padding: 20px;
+    width: 95%;
+  }
+  .popup-header h2 {
+    font-size: 18px;
+  }
+  .form-group {
+    margin-bottom: 15px;
+  }
+}
+
+.user-selection {
+  width: 100%;
+}
+
+.user-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.user-select-btn {
+  width: 100%;
+  padding: 15px;
+  background: #f5f7fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.user-select-btn:hover {
+  background: #e8f0fe;
+  border-color: #2b5797;
+  transform: translateX(2px);
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.user-info strong {
+  font-size: 14px;
+  color: #1a2639;
+}
+
+.user-email {
+  font-size: 12px;
+  color: #666;
+}
+
+.user-role-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.user-role-badge.admin {
+  background: #dc3545;
+  color: white;
+}
+
+.user-role-badge.student {
+  background: #28a745;
+  color: white;
+}
+
+.office365-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.popup-container.switching {
+  animation: slideOut 0.2s ease;
+}
