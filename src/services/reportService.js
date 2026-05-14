@@ -182,6 +182,33 @@ export const deleteReport = async (id) => {
   }
 };
 
+export const createClaim = async (claimData) => {
+  try {
+    const { data, error } = await supabase
+      .from('claims')
+      .insert([claimData])
+      .select();
+    
+    if (error) throw error;
+    
+    if (data && data[0]) {
+      const { error: updateError } = await supabase
+        .from('reports')
+        .update({ status: 'pending_claim' })
+        .eq('id', claimData.report_id);
+      
+      if (updateError) {
+        console.error("Error updating report status:", updateError);
+      }
+    }
+    
+    return data[0];
+  } catch (error) {
+    console.error('Create claim error:', error);
+    return null;
+  }
+};
+
 export const getStudentNotifications = async (userId) => {
   try {
     const { data: reports } = await supabase

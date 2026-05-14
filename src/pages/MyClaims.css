@@ -675,3 +675,28 @@
     font-size: 1.2rem;
   }
 }
+.myclaims-status.completed {
+  background: #28a745;
+  color: white;
+}
+
+.myclaims-modal-completed {
+  background: #e8f5e9;
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-top: 8px;
+  border-left: 4px solid #28a745;
+}
+
+.myclaims-modal-completed h4 {
+  color: #2e7d32;
+  margin: 0 0 8px 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.myclaims-modal-completed p {
+  margin: 5px 0;
+  font-size: 0.85rem;
+  color: #2e7d32;
+}

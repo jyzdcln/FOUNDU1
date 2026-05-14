@@ -42,11 +42,11 @@ const ReturnToUserModal = ({ report, onClose, onSuccess }) => {
           
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label>FEEDBACK / INSTRUCTIONS FOR STUDENT</label>
+              <label>FEEDBACK / INSTRUCTION FOR STUDENT</label>
               <textarea
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
-                placeholder="Please specify what information is missing or needs to be corrected..."
+                placeholder="Please provide the missing or corrected information..."
                 rows="5"
                 required
               />
@@ -55,7 +55,7 @@ const ReturnToUserModal = ({ report, onClose, onSuccess }) => {
             
             <div className="form-buttons">
               <button type="submit" className="return-btn" disabled={submitting}>
-                {submitting ? "PROCESSING..." : "RETURN TO STUDENT"}
+                {submitting ? "PROCESSING..." : "Return to Student"}
               </button>
               <button type="button" className="cancel-btn" onClick={onClose}>Cancel</button>
             </div>

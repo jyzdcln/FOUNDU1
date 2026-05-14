@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../services/supabase";
+import { createClaim } from "../services/reportService";
+import FoundItemFormModal from "../components/student/FoundItemFormModal";
 import "./ItemDetails.css";
 import "./StudentDashboard.css";
 import founduLogo from "../assets/icons/foundulogo-icon.png";
@@ -13,6 +15,8 @@ const ItemDetails = () => {
   const navigate = useNavigate();
   const [item, setItem] = useState(null);
   const [showClaimForm, setShowClaimForm] = useState(false);
+  const [showFoundForm, setShowFoundForm] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
@@ -23,6 +27,7 @@ const ItemDetails = () => {
   useEffect(() => {
     loadItemDetails();
     loadNotifications();
+    loadCurrentUser();
   }, [id]);
 
   useEffect(() => {
@@ -39,6 +44,11 @@ const ItemDetails = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const loadCurrentUser = () => {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    setCurrentUser(user);
+  };
 
   const loadItemDetails = async () => {
     const { data, error } = await supabase
@@ -172,6 +182,10 @@ const ItemDetails = () => {
     setShowClaimForm(true);
   };
 
+  const handleFoundClick = () => {
+    setShowFoundForm(true);
+  };
+
   const goToBrowse = () => {
     navigate('/student-dashboard', { state: { showBrowse: true } });
   };
@@ -186,6 +200,10 @@ const ItemDetails = () => {
 
   const toggleNotification = () => {
     setIsNotificationOpen(!isNotificationOpen);
+  };
+
+  const isReporter = () => {
+    return item && currentUser && item.user_id === currentUser.id;
   };
 
   return (
@@ -306,25 +324,56 @@ const ItemDetails = () => {
               </div>
             </div>
 
-            {item.type === "found" && (
+            {!isReporter() && (
               <div className="item-details-claim-section">
-                <div className="item-details-reported-by">
-                  <span className="item-details-reported-label">REPORTED BY</span>
-                  <p className="item-details-reported-name">Administrator</p>
-                </div>
-                <p className="item-details-claim-message">
-                  Are you the owner of this item? Submit your proof to claim it back.
-                </p>
-                <button className="item-details-claim-btn" onClick={handleClaimClick}>
-                  Claim This Item
-                </button>
+                {item.type === "found" && (
+                  <>
+                    <div className="item-details-reported-by">
+                      <span className="item-details-reported-label">REPORTED BY</span>
+                      <p className="item-details-reported-name">Administrator</p>
+                    </div>
+                    <p className="item-details-claim-message">
+                      Are you the owner of this item? Submit your proof to claim it back.
+                    </p>
+                    <button className="item-details-claim-btn" onClick={handleClaimClick}>
+                      Claim This Item
+                    </button>
+                  </>
+                )}
+
+                {item.type === "lost" && (
+                  <>
+                    <div className="item-details-reported-by">
+                      <span className="item-details-reported-label">REPORTED BY</span>
+                      <p className="item-details-reported-name">Student</p>
+                    </div>
+                    <p className="item-details-claim-message">
+                      Did you find this item? Help return it to the owner.
+                    </p>
+                    <button className="item-details-found-btn" onClick={handleFoundClick}>
+                      I Found This Item
+                    </button>
+                  </>
+                )}
+
                 <p className="item-details-posted-date">
                   Posted on {formatDateTime(item.created_at)}
                 </p>
                 <p className="item-details-security-notice">
                   Security Notice: All items are securely stored and inventoried. 
                   They are kept for strictly 30 days before being donated to local 
-                  charities or disposed of according to SIIT policy.
+                  charities or disposed of according to STI policy.
+                </p>
+              </div>
+            )}
+
+            {isReporter() && (
+              <div className="item-details-claim-section">
+                <p className="item-details-claim-message">
+                  This is your report. You cannot claim your own item.
+                </p>
+                <p className="item-details-posted-date">
+                  Posted on {formatDateTime(item.created_at)}
                 </p>
               </div>
             )}
@@ -334,6 +383,16 @@ const ItemDetails = () => {
 
       {showClaimForm && item && (
         <ClaimFormModal item={item} onClose={() => setShowClaimForm(false)} />
+      )}
+
+      {showFoundForm && item && (
+        <FoundItemFormModal 
+          lostReport={item} 
+          onClose={() => setShowFoundForm(false)} 
+          onSuccess={() => {
+            alert("Thank you! The owner has been notified. Admin will verify your submission.");
+          }}
+        />
       )}
     </div>
   );
@@ -363,9 +422,6 @@ const ClaimFormModal = ({ item, onClose }) => {
     
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     
-    console.log("User object:", user);
-    console.log("Item ID:", item.id);
-    
     if (!user.id) {
       alert("Please login first");
       setSubmitting(false);
@@ -380,23 +436,16 @@ const ClaimFormModal = ({ item, onClose }) => {
       status: 'pending'
     };
     
-    console.log("Submitting claim:", claimData);
-    
     try {
-      const { data, error } = await supabase
-        .from('claims')
-        .insert([claimData])
-        .select();
+      const result = await createClaim(claimData);
       
-      console.log("Response:", { data, error });
-      
-      if (error) {
-        alert("Error: " + error.message);
-      } else {
+      if (result) {
         setSuccess(true);
         setTimeout(() => {
           onClose();
         }, 2000);
+      } else {
+        alert("Error submitting claim. Please try again.");
       }
     } catch (err) {
       console.error("Error:", err);

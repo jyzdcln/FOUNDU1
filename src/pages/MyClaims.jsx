@@ -104,6 +104,8 @@ const MyClaims = () => {
         return <span className="myclaims-status approved">Approved</span>;
       case 'rejected':
         return <span className="myclaims-status rejected">Rejected</span>;
+      case 'completed':
+        return <span className="myclaims-status completed">Completed - Item Returned</span>;
       default:
         return <span className="myclaims-status pending">{status}</span>;
     }
@@ -223,7 +225,7 @@ const MyClaims = () => {
       <div className="myclaims-table">
         <div className="myclaims-table-header">
           <div className="myclaims-col-item">ITEM DETAILS</div>
-          <div className="myclaims-col-reporter">REPORTER & LOCATION</div>
+          <div className="myclaims-col-reporter">CLAIMER & LOCATION</div>
           <div className="myclaims-col-status">CURRENT STATUS</div>
           <div className="myclaims-col-action">MANAGEMENT</div>
         </div>
@@ -317,7 +319,7 @@ const MyClaims = () => {
                 
                 <div className="myclaims-modal-field">
                   <span className="myclaims-modal-label">Claim Status:</span>
-                  <span className="myclaims-modal-value">{selectedClaim.status === "approved" ? "Approved" : selectedClaim.status}</span>
+                  <span className="myclaims-modal-value">{selectedClaim.status === "approved" ? "Approved" : selectedClaim.status === "completed" ? "Completed" : selectedClaim.status}</span>
                 </div>
                 
                 <div className="myclaims-modal-field">
@@ -365,6 +367,16 @@ const MyClaims = () => {
                     <p>Bring your Student ID for verification</p>
                     <p>Hours: Monday-Friday, 8:00 AM - 5:00 PM</p>
                     <p>Items are held for 7 days only after approval</p>
+                  </div>
+                </div>
+              )}
+              
+              {selectedClaim.status === 'completed' && (
+                <div className="myclaims-modal-full">
+                  <div className="myclaims-modal-completed">
+                    <h4>Item Returned</h4>
+                    <p>This item has been successfully returned to you.</p>
+                    <p>Thank you for using FoundU!</p>
                   </div>
                 </div>
               )}

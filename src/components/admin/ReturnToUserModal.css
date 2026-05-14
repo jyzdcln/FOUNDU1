@@ -56,7 +56,7 @@
   opacity: 0.8;
 }
 
-.return-modal-close:hover {
+.return-modal-close:hover { 
   opacity: 1;
 }
 
@@ -69,11 +69,14 @@
   padding: 12px;
   border-radius: 8px;
   margin-bottom: 20px;
+  
 }
 
 .report-info p {
   margin: 5px 0;
   font-size: 0.9rem;
+  text-align: left;
+  color: #777;
 }
 
 .form-group {
@@ -86,7 +89,7 @@
   font-weight: 600;
   color: #555;
   margin-bottom: 8px;
-  text-transform: uppercase;
+  text-align: left;
 }
 
 .form-group textarea {
@@ -107,7 +110,8 @@
   display: block;
   margin-top: 5px;
   font-size: 0.7rem;
-  color: #888;
+  color: #dc3545;
+  text-align: center;
 }
 
 .form-buttons {

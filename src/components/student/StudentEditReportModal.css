@@ -58,11 +58,13 @@
 .admin-feedback strong {
   display: block;
   margin-bottom: 5px;
+  text-align: center;
 }
 
 .admin-feedback p {
   margin: 0;
   font-size: 0.8rem;
+  text-align: center;
 }
 
 .student-edit-modal-close {
@@ -96,7 +98,7 @@
   flex: 1;
 }
 
-.form-group label {
+.student-form-group label {
   display: block;
   font-size: 0.75rem;
   font-weight: 600;

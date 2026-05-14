@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AdminDashboard.css";
-
+import AdminVerifyFound from "./AdminVerifyFound";
 import ReportLostItem from "../components/admin/ReportLostItem";
 import ReportFoundItem from "../components/admin/ReportFoundItem";
 import ViewReports from "./ViewReports";
-import ClaimedItems from "./ClaimedItems"; 
+import ClaimedItems from "./ClaimedItems";
 import UnclaimedItems from "./UnclaimedItems";
 import Notifications from "./Notifications";
 import { getReports, subscribeToNewReports, subscribeToStatusChanges } from "../services/reportService";
@@ -14,7 +14,7 @@ import { supabase } from "../services/supabase";
 import dashboardIcon from "../assets/icons/dashboard-icon.png";
 import viewReportsIcon from "../assets/icons/view-icon.png";
 import claimedIcon from "../assets/icons/claimed-icon.png";
-import adminUnclaimedIcon from "../assets/icons/unclaimed-icon.png";  // ADD THIS BACK
+import adminUnclaimedIcon from "../assets/icons/unclaimed-icon.png";
 import adminLostIcon from "../assets/icons/admin-lost-icon.png";
 import adminFoundIcon from "../assets/icons/admin-found-icon.png";
 import adminUserIcon from "../assets/icons/admin-user-icon.png";
@@ -30,6 +30,7 @@ const AdminDashboard = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [recentNotifications, setRecentNotifications] = useState([]);
+  const [isPageLoading, setIsPageLoading] = useState(false);
   const dropdownRef = useRef(null);
   const notificationRef = useRef(null);
 
@@ -45,10 +46,14 @@ const AdminDashboard = () => {
     setIsDropdownOpen(false);
   };
 
-  const handleMenuClick = (menu) => {
+  const handleMenuClick = async (menu) => {
+    setIsPageLoading(true);
     setShowReportForm(false);
     setActiveMenu(menu);
     setIsNotificationOpen(false);
+    setTimeout(() => {
+      setIsPageLoading(false);
+    }, 300);
   };
 
   const handleReportLost = () => {
@@ -187,7 +192,8 @@ const AdminDashboard = () => {
     switch(activeMenu) {
       case "dashboard": return "Dashboard";
       case "viewreports": return "View Reports";
-      case "unclaimed": return "Unclaimed Items";  // ADD THIS BACK
+      case "verifyfound": return "Verify Found Items";
+      case "unclaimed": return "Unclaimed Items";
       case "claimed": return "Claimed Items";
       case "notifications": return "Notifications";
       default: return "Dashboard";
@@ -208,7 +214,9 @@ const AdminDashboard = () => {
         return <div className="content-box"></div>;
       case "viewreports":
         return <ViewReports onRefresh={refreshReports} />;
-      case "unclaimed":  // ADD THIS BACK
+      case "verifyfound":
+        return <AdminVerifyFound />;
+      case "unclaimed":
         return <UnclaimedItems />;
       case "claimed":
         return <ClaimedItems />;
@@ -223,7 +231,93 @@ const AdminDashboard = () => {
   const verifiedCount = allReports.filter(r => r.status === "verified").length;
   const claimedCount = allReports.filter(r => r.status === "claimed").length;
   const rejectedCount = allReports.filter(r => r.status === "rejected").length;
-  const unclaimedCount = allReports.filter(r => r.status === "verified").length;  // ADD THIS BACK
+  const unclaimedCount = allReports.filter(r => r.status === "verified").length;
+
+  const LoadingSpinner = () => (
+    <div className="admin-loading-spinner-container">
+      <div className="admin-loading-spinner"></div>
+    </div>
+  );
+
+  if (isPageLoading) {
+    return (
+      <div className="admin-dashboard">
+        <div className="sidebar">
+          <div className="sidebar-header">
+            <h2>Admin Panel</h2>
+            <p>Welcome, Jayz Daclan</p>
+          </div>
+          <nav className="sidebar-nav">
+            <div className="sidebar-section">
+              <div className="sidebar-section-title">MAIN</div>
+              <button className={`nav-item ${activeMenu === "dashboard" ? "active" : ""}`} onClick={() => handleMenuClick("dashboard")}>
+                <img src={dashboardIcon} alt="dashboard" className="nav-icon-img" />
+                Dashboard
+              </button>
+            </div>
+            <div className="sidebar-section">
+              <div className="sidebar-section-title">REPORTS MANAGEMENT</div>
+              <button className={`nav-item ${activeMenu === "verifyfound" ? "active" : ""}`} onClick={() => handleMenuClick("verifyfound")}>
+                <img src={viewReportsIcon} alt="verify found" className="nav-icon-img" />
+                Verify Found Items
+              </button>
+              <button className={`nav-item ${activeMenu === "viewreports" ? "active" : ""}`} onClick={() => handleMenuClick("viewreports")}>
+                <img src={viewReportsIcon} alt="view reports" className="nav-icon-img" />
+                View Reports
+              </button>
+              <button className={`nav-item ${activeMenu === "unclaimed" ? "active" : ""}`} onClick={() => handleMenuClick("unclaimed")}>
+                <img src={adminUnclaimedIcon} alt="unclaimed" className="nav-icon-img" />
+                Unclaimed Items
+                {unclaimedCount > 0 && <span className="nav-badge">{unclaimedCount}</span>}
+              </button>
+              <button className={`nav-item ${activeMenu === "claimed" ? "active" : ""}`} onClick={() => handleMenuClick("claimed")}>
+                <img src={claimedIcon} alt="claimed" className="nav-icon-img" />
+                Claimed Items
+              </button>
+            </div>
+            <div className="sidebar-section">
+              <div className="sidebar-section-title">ACTIONS</div>
+              <button className={`nav-item ${activeMenu === "lost" ? "active" : ""}`} onClick={handleReportLost}>
+                <img src={adminLostIcon} alt="report lost" className="nav-icon-img" />
+                Report Lost Item
+              </button>
+              <button className={`nav-item ${activeMenu === "found" ? "active" : ""}`} onClick={handleReportFound}>
+                <img src={adminFoundIcon} alt="report found" className="nav-icon-img" />
+                Report Found Item
+              </button>
+            </div>
+          </nav>
+          <div className="sidebar-footer">
+            <div className="footer-text"></div>
+          </div>
+        </div>
+        <div className="main-content">
+          <div className="top-bar">
+            <div className="top-bar-left">
+              <h1>{getPageTitle()}</h1>
+            </div>
+            <div className="top-bar-right">
+              <div className="notification-bell" ref={notificationRef}>
+                <div className="notification-icon" onClick={toggleNotification}>
+                  <img src={notificationIcon} alt="notifications" className="notification-icon-img" />
+                  <span className="notification-badge">{pendingCount}</span>
+                </div>
+              </div>
+              <div className="admin-info" ref={dropdownRef}>
+                <div className="avatar" onClick={toggleDropdown}>
+                  <img src={adminUserIcon} alt="user" className="avatar-user-icon" />
+                  <img src={adminDropdownIcon} alt="dropdown" className="avatar-dropdown-icon" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="content-area">
+            <LoadingSpinner />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="admin-dashboard">
@@ -244,11 +338,15 @@ const AdminDashboard = () => {
 
           <div className="sidebar-section">
             <div className="sidebar-section-title">REPORTS MANAGEMENT</div>
+            <button className={`nav-item ${activeMenu === "verifyfound" ? "active" : ""}`} onClick={() => handleMenuClick("verifyfound")}>
+              <img src={viewReportsIcon} alt="verify found" className="nav-icon-img" />
+              Verify Found Items
+            </button>
             <button className={`nav-item ${activeMenu === "viewreports" ? "active" : ""}`} onClick={() => handleMenuClick("viewreports")}>
               <img src={viewReportsIcon} alt="view reports" className="nav-icon-img" />
               View Reports
             </button>
-            <button className={`nav-item ${activeMenu === "unclaimed" ? "active" : ""}`} onClick={() => handleMenuClick("unclaimed")}>  {/* ADD THIS BACK */}
+            <button className={`nav-item ${activeMenu === "unclaimed" ? "active" : ""}`} onClick={() => handleMenuClick("unclaimed")}>
               <img src={adminUnclaimedIcon} alt="unclaimed" className="nav-icon-img" />
               Unclaimed Items
               {unclaimedCount > 0 && <span className="nav-badge">{unclaimedCount}</span>}

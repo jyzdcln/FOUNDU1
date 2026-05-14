@@ -196,6 +196,8 @@
 
 .item-details-claim-btn:hover {
   background: #1e3f6e;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(43, 87, 151, 0.3);
 }
 
 .item-details-posted-date {
@@ -386,3 +388,22 @@
 .item-details-login-to-claim-btn:hover {
   background: #1e3f6e;
 } 
+.item-details-found-btn {
+  background: #2b5797;
+  color: white;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin: 0 0 24px 16px;
+  display: inline-block;
+}
+
+.item-details-found-btn:hover {
+  background: #1e3f6e;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}

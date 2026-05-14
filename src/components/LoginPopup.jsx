@@ -64,6 +64,9 @@ const LoginPopup = ({
                   onChange={(e) => setOffice365Email(e.target.value)}
                   placeholder="Enter your email"
                   required
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck="false"
                 />
               </div>
               <div className="form-group">
@@ -74,6 +77,9 @@ const LoginPopup = ({
                   onChange={(e) => setOffice365Password(e.target.value)}
                   placeholder="Enter your password"
                   required
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck="false"
                 />
               </div>
               {error && <div className="error-message">{error}</div>}
@@ -92,6 +98,9 @@ const LoginPopup = ({
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Enter username"
                   required
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck="false"
                 />
               </div>
               <div className="form-group">
@@ -102,6 +111,9 @@ const LoginPopup = ({
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter password"
                   required
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck="false"
                 />
               </div>
               <div className="form-options">

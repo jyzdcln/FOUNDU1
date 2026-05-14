@@ -52,6 +52,111 @@
   background: rgb(230, 230, 230);
 }
 
+.notification-bell {
+  position: relative;
+}
+
+.notification-icon {
+  position: relative;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #2b5797;
+  border-radius: 30px;
+  transition: background 0.2s;
+}
+
+.notification-icon:hover {
+  background: #1e3f6e;
+}
+
+.notification-icon-img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #dc3545;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 350px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #f8f9fa;
+}
+
+.notification-header h4 {
+  font-size: 1rem;
+  color: #333;
+  margin: 0;
+}
+
+.notification-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.notification-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.notification-item:hover {
+  background: #f5f5f5;
+}
+
+.notification-item.unread {
+  background: #e3f2fd;
+}
+
+.notification-content p {
+  font-size: 0.85rem;
+  color: #333;
+  margin-bottom: 4px;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+  text-align: left;
+}
+
+.notification-time {
+  font-size: 0.7rem;
+  color: #999;
+}
+
 .user-dropdown {
   position: relative;
 }
@@ -281,5 +386,10 @@
   .delete-notif-btn {
     flex: 1;
     text-align: center;
+  }
+  
+  .notification-dropdown {
+    width: 300px;
+    right: -50px;
   }
 }
