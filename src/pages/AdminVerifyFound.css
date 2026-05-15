@@ -227,6 +227,7 @@
   color: #374151;
   flex: 1;
   word-break: break-word;
+  text-align: left;
 }
 
 .verify-found-message {
@@ -258,7 +259,7 @@
   color: white;
   border: none;
   padding: 10px;
-  border-radius: 6px;
+  border-radius: 30px;
   font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
@@ -420,25 +421,25 @@
   border-top: 1px solid #e5e7eb;
   display: flex;
   gap: 12px;
-  background: #fafafa;
+  background: transparent;
   border-radius: 0 0 16px 16px;
 }
 
 .verify-found-modal-approve {
   flex: 1;
   background: transparent;
-  color: rgb(0, 0, 0);
-  border: 2px solid #218838;
+  color:black;
+  border: 1px solid #ccc;
   padding: 12px;
-  border-radius: 8px;
+  border-radius: 30px;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   transition: background 0.2s;
 }
 
 .verify-found-modal-approve:hover {
-  background: #218838;
+  background: rgb(230, 230, 230);;
 }
 
 .verify-found-modal-approve:disabled {
@@ -448,19 +449,22 @@
 
 .verify-found-modal-reject {
   flex: 1;
-  background: #dc3545;
-  color: white;
+  background: transparent;
+  color: #dc3545;
   border: none;
   padding: 12px;
-  border-radius: 8px;
+  border-radius: 30px;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
+  border: 1px solid #dc3545;
+  font-family: 'Inter', sans-serif;
 }
 
 .verify-found-modal-reject:hover {
   background: #c82333;
+  color: white;
 }
 
 .verify-found-modal-reject:disabled {
@@ -469,18 +473,18 @@
 }
 
 .verify-found-modal-close-btn {
-  background: #6c757d;
+  background: #292929;
   color: white;
   border: none;
   padding: 12px 24px;
-  border-radius: 8px;
+  border-radius: 30px;
   font-size: 0.85rem;
   cursor: pointer;
   transition: background 0.2s;
 }
 
 .verify-found-modal-close-btn:hover {
-  background: #5a6268;
+  background: rgb(24, 24, 24);
 }
 
 @media (max-width: 768px) {

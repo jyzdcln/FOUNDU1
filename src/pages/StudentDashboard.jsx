@@ -14,6 +14,8 @@ import ReportFoundItemModal from "../components/student/ReportFoundItemModal";
 import StudentEditReportModal from "../components/student/StudentEditReportModal";
 import locationIcon from "../assets/icons/location-icons.png";
 import tagIcon from "../assets/icons/tag-icons.png";
+import searchIcon from "../assets/icons/Viewreport-icons.png";
+import downArrowIcon from "../assets/icons/down-arrow-icon.png";
 import { supabase } from "../services/supabase";
 
 const StudentDashboard = () => {
@@ -50,7 +52,6 @@ const StudentDashboard = () => {
   }, []);
 
   useEffect(() => {
-    // Handle navigation from ItemDetails page and other pages
     if (location.state?.showBrowse !== undefined) {
       setShowBrowse(location.state.showBrowse);
       setShowMyClaims(false);
@@ -60,7 +61,6 @@ const StudentDashboard = () => {
       setShowBrowse(false);
     }
     else if (!location.state) {
-      // Default view when no state is passed
       setShowBrowse(true);
       setShowMyClaims(false);
     }
@@ -384,10 +384,10 @@ const StudentDashboard = () => {
                 {isReportDropdownOpen && (
                   <div className="report-dropdown-menu">
                     <button className="report-dropdown-item" onClick={handleReportLost}>
-                      I Lost Something
+                      Report Lost Item
                     </button>
                     <button className="report-dropdown-item" onClick={handleReportFound}>
-                      I Found Something
+                      Report Found Item
                     </button>
                   </div>
                 )}
@@ -417,22 +417,27 @@ const StudentDashboard = () => {
                     <div key={report.id} className="my-report-card">
                       <div className="my-report-info">
                         <h4>{report.title}</h4>
-                        <p>Status: <span className={`status-${report.status}`}>{report.status.toUpperCase()}</span></p>
-                        {report.admin_notes && (
-                          <p className="admin-note">Note from Admin: {report.admin_notes}</p>
+                        <p className="my-report-reported">Reported: {formatDate(report.created_at)}</p>
+                        <div className="my-report-meta">
+                          <span className="my-report-category">{report.category || "Uncategorized"}</span>
+                          <span className={`my-report-status ${report.status}`}>
+                            {report.status === "returned" ? "RETURNED" : "PENDING"}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="my-report-action">
+                        {report.status === "returned" && (
+                          <button 
+                            className="edit-report-btn"
+                            onClick={() => {
+                              setSelectedReportForEdit(report);
+                              setShowEditModal(true);
+                            }}
+                          >
+                            Edit & Resubmit
+                          </button>
                         )}
                       </div>
-                      {report.status === "returned" && (
-                        <button 
-                          className="edit-report-btn"
-                          onClick={() => {
-                            setSelectedReportForEdit(report);
-                            setShowEditModal(true);
-                          }}
-                        >
-                          Edit & Resubmit
-                        </button>
-                      )}
                     </div>
                   ))}
                 </div>
@@ -448,26 +453,32 @@ const StudentDashboard = () => {
               
               <div className="browse-sidebar-section">
                 <h3>KEYWORDS</h3>
-                <input 
-                  type="text" 
-                  className="browse-keyword-input"
-                  placeholder="Search..."
-                  value={filters.keyword}
-                  onChange={(e) => handleFilterChange("keyword", e.target.value)}
-                />
+                <div className="browse-keyword-wrapper">
+                  <input 
+                    type="text" 
+                    className="browse-keyword-input"
+                    placeholder="Search..."
+                    value={filters.keyword}
+                    onChange={(e) => handleFilterChange("keyword", e.target.value)}
+                  />
+                  <img src={searchIcon} alt="search" className="browse-search-icon" />
+                </div>
               </div>
               
               <div className="browse-sidebar-section">
                 <h3>CATEGORY</h3>
-                <select 
-                  className="browse-category-select"
-                  value={filters.category}
-                  onChange={(e) => handleFilterChange("category", e.target.value)}
-                >
-                  {uniqueCategories.map(cat => (
-                    <option key={cat} value={cat}>{cat}</option>
-                  ))}
-                </select>
+                <div className="browse-category-wrapper">
+                  <select 
+                    className="browse-category-select"
+                    value={filters.category}
+                    onChange={(e) => handleFilterChange("category", e.target.value)}
+                  >
+                    {uniqueCategories.map(cat => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+                  <img src={downArrowIcon} alt="dropdown" className="browse-category-icon" />
+                </div>
               </div>
               
               <div className="browse-sidebar-section">
@@ -548,7 +559,7 @@ const StudentDashboard = () => {
                               {report.type === "lost" ? "LOST" : "FOUND"}
                             </div>
                             <div className={`status-badge ${report.status}`}>
-                              {report.status === "verified" ? "VERIFIED" : "PENDING"}
+                              {report.status === "verified" ? "Verified" : "Pending"}
                             </div>
                           </div>
                           <div className="browse-item-date">

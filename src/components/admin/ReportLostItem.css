@@ -236,7 +236,7 @@
 }
 
 .reportlost-cancel-btn:hover {
-  background: #f8f9fa;
+  background: transparent;
   border-color: #dc3545;
   color: #dc3545;
 }

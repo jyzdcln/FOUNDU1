@@ -11,9 +11,9 @@
 }
 
 .sidebar {
-  border-radius: none;
+  border-top-right-radius: 40px;  
   width: 250px;
-  background-color: white;
+  background: #f5f5f5;
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -47,7 +47,7 @@
 
 .sidebar-nav {
   flex: 1;
-  padding: 25px 0;
+  padding: 30px 0;
   overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -66,7 +66,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #000000;
+  color: #333;
   padding: 8px 24px;
   margin-top: 5px;
   text-align: left;
@@ -94,6 +94,8 @@
 .nav-item.active {
   background: #2b5797;
   color: white;
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
 }
 
 .nav-icon-img {
@@ -251,18 +253,21 @@
   min-width: 160px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   text-align: center;
+  border-bottom: #ccc 4px solid;
 }
 
 .stat-card h3 {
   font-size: 0.8rem;
   color: #7f8c8d;
   margin-bottom: 10px;
+  text-align: center;
 }
 
 .stat-number {
   font-size: 2rem;
   font-weight: bold;
   color: #2c3e50;
+  text-align: center;
 }
 
 .content-area {
@@ -350,6 +355,7 @@
 .notification-header h4 {
   font-size: 1rem;
   color: #333;
+  text-align: left;
 }
 
 .mark-all-read {
@@ -384,11 +390,14 @@
   font-size: 0.85rem;
   color: #333;
   margin-bottom: 4px;
+  text-align: left;
 }
 
 .notification-time {
   font-size: 0.7rem;
   color: #999;
+  text-align: left;
+  display: block;
 }
 
 .notification-footer {
@@ -405,7 +414,194 @@
   cursor: pointer;
 }
 
-/* Responsive Styles */
+/* System Log & Recent Reports Styles */
+.system-log-section {
+  background: white;
+  border-radius: 12px;
+  margin: 0 30px 30px 30px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.system-log-header {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.system-log-header h2 {
+  font-size: 1.2rem;
+  color: #2c3e50;
+  margin: 0;
+  text-align: left;
+}
+
+.system-log-table-container {
+  overflow-x: auto;
+}
+
+.system-log-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.system-log-table tr {
+  display: table-row;
+}
+
+.system-log-table thead tr {
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.system-log-table th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: #fafafa;
+}
+
+.system-log-table td {
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.system-log-table td:first-child,
+.system-log-table th:first-child {
+  padding-left: 16px;
+}
+
+.system-log-table td:last-child,
+.system-log-table th:last-child {
+  padding-right: 16px;
+}
+
+.log-item-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.log-item-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+  text-align: left;
+}
+
+.log-item-category {
+  font-size: 0.7rem;
+  color: #666;
+  background: #f0f0f0;
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  width: fit-content;
+  text-align: left;
+}
+
+.log-item-date {
+  font-size: 0.7rem;
+  color: #999;
+  margin-top: 2px;
+  text-align: left;
+}
+
+.log-reporter-name {
+  font-size: 0.85rem;
+  color: #333;
+  font-weight: 500;
+  text-align: left;
+}
+
+.log-status-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-align: center;
+  min-width: 80px;
+}
+
+.log-status-pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.log-status-verified {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.log-status-claimed {
+  background: #cce5ff;
+  color: #004085;
+}
+
+.log-status-rejected {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.log-status-resolved {
+  background: #d4edda;
+  color: #155724;
+}
+
+.log-view-btn {
+  padding: 6px 20px;
+  background: #2b5797;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-weight: 500;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.log-view-btn:hover {
+  background: #1e3f6e;
+}
+
+.log-empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+}
+
+.admin-loading-spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.admin-loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #2b5797;
+  border-radius: 50%;
+  animation: adminSpin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes adminSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 @media (max-width: 768px) {
   .sidebar {
     width: 200px;
@@ -424,7 +620,7 @@
   }
   
   .nav-item {
-    padding: 8px 15px;
+    padding: 8px 25px;
     font-size: 0.7rem;
     gap: 8px;
   }
@@ -446,6 +642,8 @@
   
   .top-bar-left h1 {
     font-size: 1.1rem;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
   }
   
   .avatar {
@@ -472,6 +670,30 @@
   
   .content-area {
     padding: 0 15px 15px 15px;
+  }
+  
+  .system-log-section {
+    margin: 0 15px 15px 15px;
+    padding: 15px;
+  }
+  
+  .system-log-table th,
+  .system-log-table td {
+    padding: 10px 12px;
+  }
+  
+  .log-item-title {
+    font-size: 0.85rem;
+  }
+  
+  .log-view-btn {
+    padding: 4px 12px;
+    font-size: 0.65rem;
+  }
+  
+  .log-status-badge {
+    min-width: 70px;
+    padding: 3px 8px;
   }
 }
 
@@ -506,26 +728,4 @@
   .avatar-dropdown-menu {
     min-width: 130px;
   }
-}
-.admin-loading-spinner-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 400px;
-}
-
-.admin-loading-spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #2b5797;
-  border-radius: 50%;
-  animation: adminSpin 1s linear infinite;
-  margin-bottom: 16px;
-}
-
-@keyframes adminSpin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }

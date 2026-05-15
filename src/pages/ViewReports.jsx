@@ -313,7 +313,7 @@ const ViewReports = ({ onRefresh }) => {
                       className="vr-modal-return-btn"
                       onClick={() => handleReturnToUser(selectedReport)}
                     >
-                      Return to User
+                      Return
                     </button>
                   </>
                 )}

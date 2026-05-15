@@ -18,7 +18,7 @@
 
 .vr-header-row {
   display: flex;
-  justify-content: space-between;
+  justify-content:flex-end;
   align-items: center;
   margin-bottom: 24px;
   padding-bottom: 16px;
@@ -394,7 +394,7 @@
   background: transparent;
   color: #333;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 30px;
   cursor: pointer;
   font-size: 0.85rem;
   font-weight: 500;
@@ -409,15 +409,16 @@
   padding: 10px;
   background: transparent;
   color: #c82333;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  border: 1px solid #c82333;
+  border-radius: 30px;
   cursor: pointer;
   font-size: 0.85rem;
   font-weight: 500;
 }
 
 .vr-modal-delete-btn:hover {
-  color: #c82333;
+  background: #c82333;
+  color: #ffffff;
 }
 
 .vr-empty-state {

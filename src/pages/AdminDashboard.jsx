@@ -20,11 +20,13 @@ import adminFoundIcon from "../assets/icons/admin-found-icon.png";
 import adminUserIcon from "../assets/icons/admin-user-icon.png";
 import adminDropdownIcon from "../assets/icons/admin-dropdown-icon.png";
 import notificationIcon from "../assets/icons/notification-icon.png";
+import verifyFoundIcon from "../assets/icons/Verified-found-icon.png";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [activeMenu, setActiveMenu] = useState("dashboard");
   const [allReports, setAllReports] = useState([]);
+  const [recentReports, setRecentReports] = useState([]);
   const [showReportForm, setShowReportForm] = useState(false);
   const [reportType, setReportType] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -125,6 +127,31 @@ const AdminDashboard = () => {
     }
   };
 
+  const loadRecentReports = async () => {
+    const { data, error } = await supabase
+      .from('reports')
+      .select(`
+        id,
+        title,
+        category,
+        type,
+        status,
+        created_at,
+        users (
+          name,
+          email
+        )
+      `)
+      .order('created_at', { ascending: false })
+      .limit(10);
+
+    if (error) {
+      console.error("Error loading recent reports:", error);
+    } else {
+      setRecentReports(data || []);
+    }
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -143,6 +170,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     loadAllReports();
     loadRecentNotifications();
+    loadRecentReports();
     
     if (Notification.permission === "default") {
       Notification.requestPermission();
@@ -155,6 +183,7 @@ const AdminDashboard = () => {
       
       await loadAllReports();
       await loadRecentNotifications();
+      await loadRecentReports();
       
       if (Notification.permission === "granted") {
         new Notification(`New ${newReport.type} report: ${newReport.title}`);
@@ -165,6 +194,7 @@ const AdminDashboard = () => {
       console.log("Report status changed in real-time!", updatedReport);
       await loadAllReports();
       await loadRecentNotifications();
+      await loadRecentReports();
     });
     
     return () => {
@@ -182,19 +212,20 @@ const AdminDashboard = () => {
     const reports = await getReports();
     setAllReports(reports);
     await loadRecentNotifications();
+    await loadRecentReports();
     return reports;
   };
 
   const getPageTitle = () => {
     if (showReportForm) {
-      return reportType === "lost" ? "Report Lost Item" : "Report Found Item";
+      return reportType === "lost" ? "Report Lost" : "Report Found";
     }
     switch(activeMenu) {
       case "dashboard": return "Dashboard";
-      case "viewreports": return "View Reports";
-      case "verifyfound": return "Verify Found Items";
-      case "unclaimed": return "Unclaimed Items";
-      case "claimed": return "Claimed Items";
+      case "overview": return "Overview";
+      case "founditems": return "Found Items";
+      case "unclaimed": return "Unclaimed";
+      case "resolved": return "Resolved";
       case "notifications": return "Notifications";
       default: return "Dashboard";
     }
@@ -212,19 +243,47 @@ const AdminDashboard = () => {
     switch(activeMenu) {
       case "dashboard":
         return <div className="content-box"></div>;
-      case "viewreports":
+      case "overview":
         return <ViewReports onRefresh={refreshReports} />;
-      case "verifyfound":
+      case "founditems":
         return <AdminVerifyFound />;
       case "unclaimed":
         return <UnclaimedItems />;
-      case "claimed":
+      case "resolved":
         return <ClaimedItems />;
       case "notifications":
         return <Notifications />;
       default:
         return <p>Welcome to Dashboard</p>;
     }
+  };
+
+  const getStatusBadgeClass = (status) => {
+    switch(status) {
+      case "pending": return "log-status-pending";
+      case "verified": return "log-status-verified";
+      case "claimed": return "log-status-claimed";
+      case "rejected": return "log-status-rejected";
+      case "resolved": return "log-status-resolved";
+      default: return "log-status-pending";
+    }
+  };
+
+  const getStatusText = (status) => {
+    switch(status) {
+      case "pending": return "PENDING";
+      case "verified": return "VERIFIED";
+      case "claimed": return "CLAIMED";
+      case "rejected": return "REJECTED";
+      case "resolved": return "RESOLVED";
+      default: return status.toUpperCase();
+    }
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
   };
 
   const pendingCount = allReports.filter(r => r.status === "pending").length;
@@ -257,33 +316,33 @@ const AdminDashboard = () => {
             </div>
             <div className="sidebar-section">
               <div className="sidebar-section-title">REPORTS MANAGEMENT</div>
-              <button className={`nav-item ${activeMenu === "verifyfound" ? "active" : ""}`} onClick={() => handleMenuClick("verifyfound")}>
-                <img src={viewReportsIcon} alt="verify found" className="nav-icon-img" />
-                Verify Found Items
+              <button className={`nav-item ${activeMenu === "overview" ? "active" : ""}`} onClick={() => handleMenuClick("overview")}>
+                <img src={viewReportsIcon} alt="overview" className="nav-icon-img" />
+                Overview
               </button>
-              <button className={`nav-item ${activeMenu === "viewreports" ? "active" : ""}`} onClick={() => handleMenuClick("viewreports")}>
-                <img src={viewReportsIcon} alt="view reports" className="nav-icon-img" />
-                View Reports
+              <button className={`nav-item ${activeMenu === "founditems" ? "active" : ""}`} onClick={() => handleMenuClick("founditems")}>
+                <img src={verifyFoundIcon} alt="found items" className="nav-icon-img" />
+                Found Items
               </button>
               <button className={`nav-item ${activeMenu === "unclaimed" ? "active" : ""}`} onClick={() => handleMenuClick("unclaimed")}>
                 <img src={adminUnclaimedIcon} alt="unclaimed" className="nav-icon-img" />
-                Unclaimed Items
+                Unclaimed
                 {unclaimedCount > 0 && <span className="nav-badge">{unclaimedCount}</span>}
               </button>
-              <button className={`nav-item ${activeMenu === "claimed" ? "active" : ""}`} onClick={() => handleMenuClick("claimed")}>
-                <img src={claimedIcon} alt="claimed" className="nav-icon-img" />
-                Claimed Items
+              <button className={`nav-item ${activeMenu === "resolved" ? "active" : ""}`} onClick={() => handleMenuClick("resolved")}>
+                <img src={claimedIcon} alt="resolved" className="nav-icon-img" />
+                Resolved
               </button>
             </div>
             <div className="sidebar-section">
               <div className="sidebar-section-title">ACTIONS</div>
               <button className={`nav-item ${activeMenu === "lost" ? "active" : ""}`} onClick={handleReportLost}>
                 <img src={adminLostIcon} alt="report lost" className="nav-icon-img" />
-                Report Lost Item
+                Report Lost
               </button>
               <button className={`nav-item ${activeMenu === "found" ? "active" : ""}`} onClick={handleReportFound}>
                 <img src={adminFoundIcon} alt="report found" className="nav-icon-img" />
-                Report Found Item
+                Report Found
               </button>
             </div>
           </nav>
@@ -338,22 +397,22 @@ const AdminDashboard = () => {
 
           <div className="sidebar-section">
             <div className="sidebar-section-title">REPORTS MANAGEMENT</div>
-            <button className={`nav-item ${activeMenu === "verifyfound" ? "active" : ""}`} onClick={() => handleMenuClick("verifyfound")}>
-              <img src={viewReportsIcon} alt="verify found" className="nav-icon-img" />
-              Verify Found Items
+            <button className={`nav-item ${activeMenu === "overview" ? "active" : ""}`} onClick={() => handleMenuClick("overview")}>
+              <img src={viewReportsIcon} alt="overview" className="nav-icon-img" />
+              Overview
             </button>
-            <button className={`nav-item ${activeMenu === "viewreports" ? "active" : ""}`} onClick={() => handleMenuClick("viewreports")}>
-              <img src={viewReportsIcon} alt="view reports" className="nav-icon-img" />
-              View Reports
+            <button className={`nav-item ${activeMenu === "founditems" ? "active" : ""}`} onClick={() => handleMenuClick("founditems")}>
+              <img src={verifyFoundIcon} alt="found items" className="nav-icon-img" />
+              Found Items
             </button>
             <button className={`nav-item ${activeMenu === "unclaimed" ? "active" : ""}`} onClick={() => handleMenuClick("unclaimed")}>
               <img src={adminUnclaimedIcon} alt="unclaimed" className="nav-icon-img" />
-              Unclaimed Items
+              Unclaimed
               {unclaimedCount > 0 && <span className="nav-badge">{unclaimedCount}</span>}
             </button>
-            <button className={`nav-item ${activeMenu === "claimed" ? "active" : ""}`} onClick={() => handleMenuClick("claimed")}>
-              <img src={claimedIcon} alt="claimed" className="nav-icon-img" />
-              Claimed Items
+            <button className={`nav-item ${activeMenu === "resolved" ? "active" : ""}`} onClick={() => handleMenuClick("resolved")}>
+              <img src={claimedIcon} alt="resolved" className="nav-icon-img" />
+              Resolved
             </button>
           </div>
 
@@ -361,11 +420,11 @@ const AdminDashboard = () => {
             <div className="sidebar-section-title">ACTIONS</div>
             <button className={`nav-item ${activeMenu === "lost" ? "active" : ""}`} onClick={handleReportLost}>
               <img src={adminLostIcon} alt="report lost" className="nav-icon-img" />
-              Report Lost Item
+              Report Lost
             </button>
             <button className={`nav-item ${activeMenu === "found" ? "active" : ""}`} onClick={handleReportFound}>
               <img src={adminFoundIcon} alt="report found" className="nav-icon-img" />
-              Report Found Item
+              Report Found
             </button>
           </div>
         </nav>
@@ -439,28 +498,81 @@ const AdminDashboard = () => {
         </div>
 
         {!showReportForm && activeMenu === "dashboard" && (
-          <div className="stats-container">
-            <div className="stat-card">
-              <h3>Total Reports</h3>
-              <p className="stat-number">{allReports.length}</p>
+          <>
+            <div className="stats-container">
+              <div className="stat-card">
+                <h3>Total Reports</h3>
+                <p className="stat-number">{allReports.length}</p>
+              </div>
+              <div className="stat-card">
+                <h3>Pending</h3>
+                <p className="stat-number">{pendingCount}</p>
+              </div> 
+              <div className="stat-card">
+                <h3>Verified</h3>
+                <p className="stat-number">{verifiedCount}</p>
+              </div>
+              <div className="stat-card">
+                <h3>Claimed</h3>
+                <p className="stat-number">{claimedCount}</p>
+              </div>
+              <div className="stat-card">
+                <h3>Rejected</h3>
+                <p className="stat-number">{rejectedCount}</p>
+              </div>
             </div>
-            <div className="stat-card">
-              <h3>Pending</h3>
-              <p className="stat-number">{pendingCount}</p>
-            </div> 
-            <div className="stat-card">
-              <h3>Verified</h3>
-              <p className="stat-number">{verifiedCount}</p>
+
+            <div className="system-log-section">
+              <div className="system-log-header">
+                <h2>System Log & Recent Reports</h2>
+              </div>
+              <div className="system-log-table-container">
+                <table className="system-log-table">
+                  <thead>
+                    <tr>
+                      <th>ITEM DETAILS</th>
+                      <th>REPORTER</th>
+                      <th>STATUS</th>
+                      <th>ACTION</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {recentReports.length === 0 ? (
+                      <tr>
+                        <td colSpan="4" className="log-empty-state">No reports found</td>
+                      </tr>
+                    ) : (
+                      recentReports.map((report) => (
+                        <tr key={report.id}>
+                          <td className="log-item-details">
+                            <div className="log-item-title">{report.title}</div>
+                            <div className="log-item-category">{report.category || "Uncategorized"}</div>
+                            <div className="log-item-date">{formatDate(report.created_at)}</div>
+                          </td>
+                          <td className="log-reporter">
+                            <div className="log-reporter-name">{report.users?.name || report.users?.email || "Unknown"}</div>
+                          </td>
+                          <td className="log-status">
+                            <span className={`log-status-badge ${getStatusBadgeClass(report.status)}`}>
+                              {getStatusText(report.status)}
+                            </span>
+                          </td>
+                          <td className="log-action">
+                            <button 
+                              className="log-view-btn"
+                              onClick={() => handleMenuClick("overview")}
+                            >
+                              View Details
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
-            <div className="stat-card">
-              <h3>Claimed</h3>
-              <p className="stat-number">{claimedCount}</p>
-            </div>
-            <div className="stat-card">
-              <h3>Rejected</h3>
-              <p className="stat-number">{rejectedCount}</p>
-            </div>
-          </div>
+          </>
         )}
 
         <div className="content-area">

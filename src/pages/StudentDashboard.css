@@ -54,7 +54,7 @@ body {
 }
 
 .student-logo-img {
-  height: 25px;
+  height: 40px;
   width: auto;
   object-fit: contain;
 }
@@ -150,7 +150,8 @@ body {
 }
 
 .report-dropdown-item:hover {
-  background: #f0f0f0;
+  background: #2b5797;
+  color: white;
 }
 
 .student-stats-cards {
@@ -206,13 +207,12 @@ body {
 .my-report-card {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  padding: 15px;
+  align-items: center;
+  padding: 20px;
   background: #f8f9fa;
-  border-radius: 8px;
-  border-left: 4px solid #666;
-  flex-wrap: wrap;
-  gap: 12px;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  gap: 20px;
 }
 
 .my-report-info {
@@ -222,21 +222,59 @@ body {
 }
 
 .my-report-info h4 {
-  margin: 0 0 5px 0;
+  margin: 0 0 8px 0;
   font-size: 1rem;
+  font-weight: 600;
+  color: #2c3e50;
   text-align: left;
   word-wrap: break-word;
   word-break: break-word;
 }
 
-.my-report-info p {
-  margin: 3px 0;
-  font-size: 0.8rem;
+.my-report-reported {
+  font-size: 0.75rem;
+  color: #999;
+  margin-bottom: 8px;
   text-align: left;
-  word-wrap: break-word;
-  word-break: break-word;
-  white-space: normal;
-  overflow-wrap: break-word;
+}
+
+.my-report-meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.my-report-category {
+  font-size: 0.75rem;
+  color: #666;
+  background: #e8e8e8;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.my-report-status {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.my-report-status.returned {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.my-report-status.pending {
+  background: #ffe0b2;
+  color: #e65100;
+}
+
+.my-report-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 140px;
 }
 
 .admin-note {
@@ -260,19 +298,21 @@ body {
 }
 
 .edit-report-btn {
-  padding: 8px 20px;
+  padding: 8px 24px;
   background: none;
-  color: #333;
-  border: #999 solid 1px;
-  border-radius: 6px;
+  color: #2b5797;
+  border: 1px solid #2b5797;
+  border-radius: 30px;
   cursor: pointer;
-  font-size: 0.8rem;
-  font-weight: 500;
-  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  white-space: nowrap;
 }
 
 .edit-report-btn:hover {
-  background: transparent;
+  background: #2b5797;
+  color: white;
 }
 
 .empty-state {
@@ -316,7 +356,7 @@ body {
 }
 
 .dropdown-icon-img {
-  width: 16px;
+  width: 12px;
   height: 16px;
   object-fit: contain;
 }
@@ -415,6 +455,18 @@ body {
   .my-report-card {
     flex-direction: column;
     align-items: stretch;
+    text-align: center;
+  }
+  
+  .my-report-info h4,
+  .my-report-reported,
+  .my-report-meta {
+    text-align: center;
+    justify-content: center;
+  }
+  
+  .my-report-action {
+    justify-content: center;
   }
   
   .edit-report-btn {

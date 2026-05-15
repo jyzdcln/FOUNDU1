@@ -72,7 +72,6 @@
   padding: 16px;
   border-radius: 12px;
   margin-bottom: 24px;
-  
 }
 
 .found-item-lost-info p {
@@ -194,8 +193,8 @@
 
 .found-item-cancel-btn {
   flex: 0.3;
-  background: white;
-  color: #666;
+  background: #292929;
+  color: white;
   border: 1px solid #ddd;
   padding: 12px;
   border-radius: 8px;
@@ -205,13 +204,11 @@
 }
 
 .found-item-cancel-btn:hover {
-  background: #f8f9fa;
-  border-color: #dc3545;
-  color: #dc3545;
+  background: rgb(24, 24, 24);
 }
 
 .found-item-close-btn {
-  background: #28a745;
+  background: #2b5797;
   color: white;
   border: none;
   padding: 12px 24px;

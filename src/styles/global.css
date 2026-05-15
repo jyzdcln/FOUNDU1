@@ -69,7 +69,7 @@ body::-webkit-scrollbar {
 }
 
 .logo-img {
-  height: 25px;
+  height: 40px;
   width: auto;
   max-height: 40px;
   object-fit: contain;

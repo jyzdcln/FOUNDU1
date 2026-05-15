@@ -20,7 +20,7 @@
 
 .claimed-header-row {
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
   align-items: center;
   margin-bottom: 24px;
   flex-wrap: wrap;
@@ -259,18 +259,21 @@
   font-weight: 600;
   color: #111827;
   margin: 0 0 4px 0;
+  text-align: left;
 }
 
 .claimed-item-meta {
   font-size: 0.75rem;
   color: #6b7280;
   margin-bottom: 8px;
+  text-align: left;
 }
 
 .claimed-item-detail {
   font-size: 0.75rem;
   color: #6b7280;
   margin-bottom: 4px;
+  text-align: left;
 }
 
 .claimed-detail-label {
@@ -440,9 +443,9 @@
 
 .claimed-modal-approve {
   flex: 1;
-  background: #28a745;
-  color: white;
-  border: none;
+  background: transparent;
+  color: #218838;
+  border: #cccccc solid 1px;
   padding: 12px;
   border-radius: 8px;
   font-size: 0.85rem;
@@ -452,14 +455,15 @@
 }
 
 .claimed-modal-approve:hover {
-  background: #218838;
+  background: none;
+  border: 1px solid #218838;
 }
 
 .claimed-modal-reject {
   flex: 1;
-  background: #dc3545;
-  color: white;
-  border: none;
+  background: transparent;
+  color: #dc3545;
+  border: #cccccc solid 1px;
   padding: 12px;
   border-radius: 8px;
   font-size: 0.85rem;
@@ -469,7 +473,8 @@
 }
 
 .claimed-modal-reject:hover {
-  background: #c82333;
+  background: none;
+  border: 1px solid #dc3545;
 }
 
 .claimed-modal-pickup {
@@ -478,7 +483,7 @@
   color: white;
   border: none;
   padding: 12px;
-  border-radius: 8px;
+  border-radius: 30px;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;

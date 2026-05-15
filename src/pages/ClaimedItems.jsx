@@ -142,55 +142,7 @@ const ClaimedItems = () => {
   };
 
   const confirmPickup = async (claimId, reportId, studentId, itemTitle) => {
-    const confirmed = window.confirm(
-      "Confirm that the student has picked up the item?\n\n" +
-      "Make sure to verify the student's ID before confirming.\n\n" +
-      "This will mark the item as RESOLVED (Returned to Owner)."
-    );
-    
-    if (!confirmed) return;
-    
-    try {
-      const { error: claimError } = await supabase
-        .from('claims')
-        .update({ 
-          status: 'completed',
-          pickup_date: new Date(),
-          pickup_confirmed: true
-        })
-        .eq('id', claimId);
-      
-      if (claimError) throw claimError;
-      
-      const { error: reportError } = await supabase
-        .from('reports')
-        .update({ 
-          status: 'resolved',
-          resolution_status: 'returned_to_owner',
-          resolution_date: new Date(),
-          resolution_notes: `Picked up by student on ${new Date().toLocaleDateString()}`
-        })
-        .eq('id', reportId);
-      
-      if (reportError) throw reportError;
-      
-      await supabase
-        .from('notifications')
-        .insert({
-          user_id: studentId,
-          type: 'pickup_completed',
-          message: `Thank you for picking up "${itemTitle}". We hope you found your item!`,
-          created_at: new Date()
-        });
-      
-      alert("Pickup confirmed! Item marked as returned to owner.");
-      loadClaims();
-      setShowModal(false);
-      
-    } catch (error) {
-      console.error("Error confirming pickup:", error);
-      alert("Failed to confirm pickup. Please try again.");
-    }
+    alert("This Feature is under Maintenance.");
   };
 
   const handleViewDetails = (claim) => {
@@ -258,8 +210,6 @@ const ClaimedItems = () => {
   return (
     <div className="claimed-container">
       <div className="claimed-header">
-        <h2>Claimed Items</h2>
-        <p>Manage and track student claims</p>
       </div>
 
       <div className="claimed-header-row">
@@ -484,13 +434,13 @@ const ClaimedItems = () => {
                     className="claimed-modal-approve"
                     onClick={() => updateClaimStatus(selectedClaim.id, "approved")}
                   >
-                    Approve Claim
+                    Approve
                   </button>
                   <button 
                     className="claimed-modal-reject"
                     onClick={() => updateClaimStatus(selectedClaim.id, "rejected")}
                   >
-                    Reject Claim
+                    Reject
                   </button>
                 </div>
               )}
@@ -499,7 +449,7 @@ const ClaimedItems = () => {
                   className="claimed-modal-pickup"
                   onClick={() => confirmPickup(selectedClaim.id, selectedClaim.report_id, selectedClaim.student_id, selectedClaim.reports?.title)}
                 >
-                  Confirm Pickup & Return to Owner
+                  Mark as Returned
                 </button>
               )}
               {(selectedClaim.status === "rejected" || selectedClaim.status === "completed") && (

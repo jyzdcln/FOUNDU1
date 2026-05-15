@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../services/supabase";
 import "./AdminVerifyFound.css";
-import searchIcon from "../assets/icons/verified-found-icon.png";
+import searchIcon from "../assets/icons/Viewreport-icons.png";
 
 const AdminVerifyFound = () => {
   const [submissions, setSubmissions] = useState([]);
@@ -12,7 +12,8 @@ const AdminVerifyFound = () => {
   const [selectedSubmission, setSelectedSubmission] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
-  const [submitting, setSubmitting] = useState(false);
+  const [isApproving, setIsApproving] = useState(false);
+  const [isRejecting, setIsRejecting] = useState(false);
 
   useEffect(() => {
     loadSubmissions();
@@ -69,79 +70,8 @@ const AdminVerifyFound = () => {
   };
 
   const handleApprove = async (submission) => {
-    const confirmed = window.confirm(
-      `Approve this submission?\n\n` +
-      `Item: ${submission.lost_report?.title}\n` +
-      `Finder: ${submission.finder_name}\n\n` +
-      `This will create a FOUND report for this item.`
-    );
-    
-    if (!confirmed) return;
-    
-    setSubmitting(true);
-    
-    try {
-      const user = JSON.parse(localStorage.getItem('user') || '{}');
-      
-      const foundReportData = {
-        user_id: user.id,
-        type: 'found',
-        title: submission.lost_report?.title,
-        category: submission.lost_report?.category,
-        description: `Found by: ${submission.finder_name}\nContact: ${submission.finder_contact}\nMessage: ${submission.finder_message}\n\nOriginal description: ${submission.lost_report?.description}`,
-        location: submission.lost_report?.location,
-        photo_url: submission.finder_photo_url,
-        status: 'verified',
-        created_at: new Date(),
-        verified_at: new Date()
-      };
-      
-      const { data: newReport, error: reportError } = await supabase
-        .from('reports')
-        .insert([foundReportData])
-        .select();
-      
-      if (reportError) throw reportError;
-      
-      const { error: updateError } = await supabase
-        .from('found_lost_items')
-        .update({ 
-          status: 'approved',
-          reviewed_at: new Date(),
-          admin_notes: 'Approved - FOUND report created'
-        })
-        .eq('id', submission.id);
-      
-      if (updateError) throw updateError;
-      
-      await supabase
-        .from('notifications')
-        .insert({
-          user_id: submission.lost_report?.user_id,
-          type: 'item_found',
-          message: `Great news! Someone found your item "${submission.lost_report?.title}". A FOUND report has been created. Go to Browse to claim it.`,
-          created_at: new Date()
-        });
-      
-      await supabase
-        .from('notifications')
-        .insert({
-          user_id: submission.finder_id,
-          type: 'submission_approved',
-          message: `Your submission for "${submission.lost_report?.title}" has been approved. Thank you for helping return this item!`,
-          created_at: new Date()
-        });
-      
-      alert("Submission approved! FOUND report created.");
-      loadSubmissions();
-      setShowModal(false);
-      
-    } catch (error) {
-      console.error("Error approving submission:", error);
-      alert("Error approving submission. Please try again.");
-    }
-    
-    setSubmitting(false);
+    alert("This Feature is Under Maintenance.");
+    return;
   };
 
   const handleReject = async (submission) => {
@@ -159,7 +89,7 @@ const AdminVerifyFound = () => {
     
     if (!confirmed) return;
     
-    setSubmitting(true);
+    setIsRejecting(true);
     
     try {
       const { error: updateError } = await supabase
@@ -192,7 +122,7 @@ const AdminVerifyFound = () => {
       alert("Error rejecting submission. Please try again.");
     }
     
-    setSubmitting(false);
+    setIsRejecting(false);
   };
 
   const openModal = (submission) => {
@@ -238,7 +168,6 @@ const AdminVerifyFound = () => {
     return (
       <div className="verify-found-loading">
         <div className="verify-found-spinner"></div>
-        <p>Loading submissions...</p>
       </div>
     );
   }
@@ -329,7 +258,7 @@ const AdminVerifyFound = () => {
                   <span className="verify-found-detail-value">{submission.finder_contact}</span>
                 </div>
                 <div className="verify-found-detail-row">
-                  <span className="verify-found-detail-label">Location Lost:</span>
+                  <span className="verify-found-detail-label">Location:</span>
                   <span className="verify-found-detail-value">{submission.lost_report?.location}</span>
                 </div>
                 <div className="verify-found-detail-row">
@@ -353,7 +282,7 @@ const AdminVerifyFound = () => {
                     className="verify-found-view-btn"
                     onClick={() => openModal(submission)}
                   >
-                    Review & Verify
+                    Verify
                   </button>
                 )}
                 {submission.status !== "pending" && (
@@ -394,7 +323,7 @@ const AdminVerifyFound = () => {
                   <span className="verify-found-modal-value">{selectedSubmission.lost_report?.location}</span>
                 </div>
                 <div className="verify-found-modal-row">
-                  <span className="verify-found-modal-label">Original Description:</span>
+                  <span className="verify-found-modal-label">Description:</span>
                   <span className="verify-found-modal-value">{selectedSubmission.lost_report?.description}</span>
                 </div>
               </div>
@@ -451,20 +380,19 @@ const AdminVerifyFound = () => {
                   <button 
                     className="verify-found-modal-approve"
                     onClick={() => handleApprove(selectedSubmission)}
-                    disabled={submitting}
                   >
-                    {submitting ? "Processing..." : "Approve & Create Report"}
+                    Create Report
                   </button>
                   <button 
                     className="verify-found-modal-reject"
                     onClick={() => handleReject(selectedSubmission)}
-                    disabled={submitting}
+                    disabled={isRejecting}
                   >
-                    {submitting ? "Processing..." : "Reject"}
+                    {isRejecting ? "Processing..." : "Reject"}
                   </button>
                 </>
               )}
-              <button className="verify-found-modal-close-btn" onClick={closeModal}>Close</button>
+              <button className="verify-found-modal-close-btn" onClick={closeModal}>Cancel</button>
             </div>
           </div>
         </div>

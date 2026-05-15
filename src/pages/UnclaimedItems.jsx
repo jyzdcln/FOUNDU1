@@ -138,7 +138,7 @@ const UnclaimedItems = () => {
   };
 
   const handleViewDetails = (reportId) => {
-    alert(`View details for report ID: ${reportId}`);
+    alert("This Feature is under Maintenance.");
   };
 
   const getFilteredReports = () => {
@@ -215,7 +215,6 @@ const UnclaimedItems = () => {
             <div className="summary-card">
               <h4>Total Unclaimed</h4>
               <div className="summary-number">{summaryStats.total}</div>
-              <small>Items available for students</small>
             </div>
             <div className="summary-card">
               <h4>Lost Items</h4>
@@ -304,7 +303,6 @@ const UnclaimedItems = () => {
           {filteredReports.length === 0 ? (
             <div className="empty-state">
               <p>No unclaimed items available</p>
-              <p className="empty-subtext">All verified items have been claimed within 30 days</p>
             </div>
           ) : (
             <div className="unclaimed-list">

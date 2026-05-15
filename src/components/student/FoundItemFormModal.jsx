@@ -18,20 +18,9 @@ const FoundItemFormModal = ({ lostReport, onClose, onSuccess }) => {
   };
 
   const handlePhotoChange = async (e) => {
-    const file = e.target.files[0];
-    if (file && file.size <= 5 * 1024 * 1024) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData({
-          ...formData,
-          photoFile: file,
-          photoPreview: reader.result
-        });
-      };
-      reader.readAsDataURL(file);
-    } else if (file) {
-      alert("File size must be less than 5MB");
-    }
+    alert("Photo upload is currently under maintenance.");
+    e.target.value = null;
+    return;
   };
 
   const uploadPhoto = async (file) => {
@@ -104,19 +93,17 @@ const FoundItemFormModal = ({ lostReport, onClose, onSuccess }) => {
     } catch (error) {
       console.error("Error submitting found item:", error);
       alert("Error submitting report. Please try again.");
+      setSubmitting(false);
     }
-
-    setSubmitting(false);
   };
 
   if (success) {
     return (
-      <div className="found-item-modal-overlay">
-        <div className="found-item-modal-container">
+      <div className="item-details-modal-overlay">
+        <div className="item-details-modal-container">
           <h2>Thank You!</h2>
           <p>Your report has been submitted.</p>
-          <p>The owner has been notified. Admin will verify your submission.</p>
-          <button onClick={onClose} className="found-item-close-btn">Close</button>
+          <button onClick={onClose} className="item-details-close-modal-btn">Close</button>
         </div>
       </div>
     );
@@ -175,7 +162,7 @@ const FoundItemFormModal = ({ lostReport, onClose, onSuccess }) => {
             </div>
 
             <div className="found-item-form-group">
-              <label>UPLOAD PHOTO OF THE ITEM (REQUIRED)</label>
+              <label>UPLOAD PHOTO OF THE ITEM (OPTIONAL)</label>
               <div className="found-item-photo-upload" onClick={() => document.getElementById('found-item-photo-input').click()}>
                 <input
                   type="file"
@@ -187,13 +174,12 @@ const FoundItemFormModal = ({ lostReport, onClose, onSuccess }) => {
                 {formData.photoPreview ? (
                   <div className="found-item-photo-preview">
                     <img src={formData.photoPreview} alt="Preview" />
-                    <p>Click to change photo</p>
                   </div>
                 ) : (
                   <div className="found-item-upload-area">
                     <span className="found-item-upload-icon"></span>
                     <p>Click to upload photo</p>
-                    <small>Max file size: 5 MB</small>
+                    <small>Photo upload is currently under maintenance</small>
                   </div>
                 )}
               </div>
