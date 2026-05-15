@@ -20,7 +20,7 @@ import adminFoundIcon from "../assets/icons/admin-found-icon.png";
 import adminUserIcon from "../assets/icons/admin-user-icon.png";
 import adminDropdownIcon from "../assets/icons/admin-dropdown-icon.png";
 import notificationIcon from "../assets/icons/notification-icon.png";
-import verifyFoundIcon from "../assets/icons/Verified-found-icon.png";
+import verifyFoundIcon from "../assets/icons/verified-found-icon.png";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
