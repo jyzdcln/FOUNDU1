@@ -58,13 +58,13 @@
 .admin-feedback strong {
   display: block;
   margin-bottom: 5px;
-  text-align: center;
+  text-align: left;
 }
 
 .admin-feedback p {
   margin: 0;
   font-size: 0.8rem;
-  text-align: center;
+  text-align: left;
 }
 
 .student-edit-modal-close {
@@ -135,8 +135,8 @@
 }
 
 .photo-upload-area:hover {
-  border-color: #2b5797;
-  background: #f1f8e9;
+  border-color: none;
+  background: none;
 }
 
 .photo-preview img {
@@ -207,11 +207,11 @@
     flex-direction: column;
     gap: 0;
   }
-  
+
   .form-buttons {
     flex-direction: column;
   }
-  
+
   .cancel-btn {
     flex: 1;
   }

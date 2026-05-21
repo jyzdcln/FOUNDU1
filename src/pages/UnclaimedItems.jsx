@@ -372,7 +372,6 @@ const UnclaimedItems = () => {
           {donationReports.length === 0 ? (
             <div className="empty-state">
               <p>No items ready for donation</p>
-              <p className="empty-subtext">All items were claimed within 30 days</p>
             </div>
           ) : (
             <div className="unclaimed-list">

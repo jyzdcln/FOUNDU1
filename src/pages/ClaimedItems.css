@@ -36,7 +36,7 @@
   width: 100%;
   padding: 10px 36px 10px 14px;
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: 20px;
   font-size: 0.85rem;
   background: white;
   transition: all 0.2s;
@@ -66,7 +66,7 @@
   color: #333;
   border: 1px solid #ddd;
   padding: 10px 36px 10px 16px;
-  border-radius: 8px;
+  border-radius: 20px;
   cursor: pointer;
   font-size: 0.85rem;
   font-weight: 500;
@@ -295,7 +295,7 @@
   color: white;
   border: none;
   padding: 8px 24px;
-  border-radius: 6px;
+  border-radius: 30px;
   font-size: 0.75rem;
   font-weight: 500;
   cursor: pointer;
@@ -497,7 +497,7 @@
   color: white;
   border: none;
   padding: 10px 28px;
-  border-radius: 8px;
+  border-radius: 20px;
   cursor: pointer;
   font-size: 0.85rem;
   font-weight: 500;
@@ -505,6 +505,12 @@
 .claimed-modal-close-btn:hover {
   background: #1e3f6e;
 }
+.status-completed {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
 @media (max-width: 768px) {
   .claimed-search-box {
     flex: 1;

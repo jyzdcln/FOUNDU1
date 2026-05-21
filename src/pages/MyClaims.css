@@ -42,7 +42,6 @@
   margin: 0;
   text-align: left;
 }
-
 @media (min-width: 768px) {
   .myclaims-subtitle {
     font-size: 0.9rem;
@@ -139,7 +138,7 @@
   min-width: 100%;
   z-index: 100;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .myclaims-category-dropdown-item {
@@ -182,8 +181,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .myclaims-empty {
@@ -343,7 +346,7 @@
 }
 
 .myclaims-status {
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   font-weight: 600;
   padding: 4px 12px;
   border-radius: 20px;
@@ -397,7 +400,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -413,7 +416,7 @@
   max-height: 85vh;
   overflow-y: auto;
   animation: modalFadeIn 0.2s ease;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 @media (min-width: 768px) {
@@ -613,13 +616,13 @@
     grid-template-columns: 1.5fr 1fr 0.8fr 1fr;
     gap: 12px;
   }
-  
+
   .myclaims-col-item {
     flex-direction: column;
     align-items: flex-start;
     font-size: 0.6rem;
   }
-  
+
   .myclaims-item-image {
     width: 50px;
     height: 50px;
@@ -630,7 +633,7 @@
   .myclaims-table-header {
     display: none;
   }
-  
+
   .myclaims-table-row {
     display: flex;
     flex-direction: column;
@@ -649,7 +652,7 @@
   }
   .myclaims-col-action {
     justify-content: flex-start;
-  } 
+  }
   .myclaims-modal-grid {
     grid-template-columns: 1fr;
     gap: 14px;
@@ -659,7 +662,7 @@
   .myclaims-col-item {
     flex-direction: column;
     align-items: flex-start;
-  } 
+  }
   .myclaims-col-reporter,
   .myclaims-col-status,
   .myclaims-col-action {
@@ -679,6 +682,7 @@
 .myclaims-status.completed {
   background: #28a745;
   color: white;
+  font-size: 0.6rem;
 }
 
 .myclaims-modal-completed {

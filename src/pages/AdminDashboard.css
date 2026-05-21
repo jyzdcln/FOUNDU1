@@ -11,9 +11,9 @@
 }
 
 .sidebar {
-  border-top-right-radius: 40px;  
-  width: 250px;
-  background: #f5f5f5;
+  border-top-right-radius: none;
+  width: 225px;
+  background: white;
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -25,6 +25,7 @@
   border-bottom: 1px solid #e0e0e0;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  box-shadow: #e0e0e0 0px 2px 8px;
 }
 
 .sidebar::-webkit-scrollbar {
@@ -212,7 +213,7 @@
   right: 0;
   background: white;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   min-width: 160px;
   z-index: 100;
   overflow: hidden;
@@ -251,7 +252,7 @@
   border-radius: 12px;
   flex: 1;
   min-width: 160px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   text-align: center;
   border-bottom: #ccc 4px solid;
 }
@@ -287,7 +288,6 @@
   color: #666;
 }
 
-/* Notification Styles */
 .notification-bell {
   position: relative;
 }
@@ -338,7 +338,7 @@
   width: 350px;
   background: white;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 1000;
   overflow: hidden;
 }
@@ -414,7 +414,6 @@
   cursor: pointer;
 }
 
-/* System Log & Recent Reports Styles */
 .system-log-section {
   background: white;
   border-radius: 12px;
@@ -447,6 +446,7 @@
 
 .system-log-table tr {
   display: table-row;
+  vertical-align: middle;
 }
 
 .system-log-table thead tr {
@@ -455,20 +455,29 @@
 
 .system-log-table th {
   text-align: left;
-  padding: 12px 16px;
+  padding: 12px 30px;
   font-size: 0.75rem;
   font-weight: 700;
   color: #555;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   background: #fafafa;
+  vertical-align: middle;
+}
+
+.system-log-table th:last-child {
+  text-align: right;
 }
 
 .system-log-table td {
   padding: 16px;
   border-bottom: 1px solid #f0f0f0;
   vertical-align: middle;
-  text-align: center;
+  text-align: left;
+}
+
+.system-log-table td:last-child {
+  text-align: right;
 }
 
 .system-log-table td:first-child,
@@ -484,7 +493,7 @@
 .log-item-details {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   align-items: flex-start;
 }
 
@@ -499,18 +508,19 @@
 .log-item-category {
   font-size: 0.7rem;
   color: #666;
-  background: #f0f0f0;
-  display: inline-block;
-  padding: 2px 10px;
-  border-radius: 20px;
-  width: fit-content;
+  background: transparent;
+  display: block;
+  padding: 0;
+  border-radius: 0;
+  width: auto;
   text-align: left;
+  margin-top: 4px;
 }
 
 .log-item-date {
   font-size: 0.7rem;
   color: #999;
-  margin-top: 2px;
+  margin-top: 4px;
   text-align: left;
 }
 
@@ -521,12 +531,17 @@
   text-align: left;
 }
 
+.log-status {
+  text-align: left;
+  vertical-align: middle;
+}
+
 .log-status-badge {
   display: inline-block;
-  padding: 5px 12px;
+  padding: 5px 10px;
   border-radius: 20px;
-  font-size: 0.7rem;
-  font-weight: 600;
+  font-size: 0.6rem;
+  font-weight: 700;
   text-align: center;
   min-width: 80px;
 }
@@ -556,21 +571,70 @@
   color: #155724;
 }
 
-.log-view-btn {
-  padding: 6px 20px;
-  background: #2b5797;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.7rem;
-  font-weight: 500;
-  transition: background 0.2s;
-  white-space: nowrap;
+.log-action {
+  text-align: right;
+  vertical-align: middle;
 }
 
-.log-view-btn:hover {
-  background: #1e3f6e;
+.kebab-menu {
+  position: relative;
+  display: inline-block;
+  text-align: right;
+}
+
+.kebab-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0 8px;
+  line-height: 1;
+  color: #666;
+  border-radius: 4px;
+}
+
+.kebab-btn:hover {
+  background: #f0f0f0;
+  color: #2b5797;
+}
+
+.kebab-dropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  min-width: 130px;
+  z-index: 1000;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+.kebab-item {
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  background: white;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: #333;
+  transition: background 0.2s;
+}
+
+.kebab-item:hover {
+  background: #f5f5f5;
+}
+
+.kebab-item.delete {
+  color: #dc3545;
+  border-top: 1px solid #e0e0e0;
+}
+
+.kebab-item.delete:hover {
+  background: #fee;
 }
 
 .log-empty-state {
@@ -598,99 +662,98 @@
 }
 
 @keyframes adminSpin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @media (max-width: 768px) {
   .sidebar {
     width: 200px;
   }
-  
+
   .sidebar-header {
     padding: 15px;
   }
-  
+
   .sidebar-header h2 {
     font-size: 1rem;
   }
-  
+
   .sidebar-header p {
     font-size: 0.6rem;
   }
-  
+
   .nav-item {
     padding: 8px 25px;
     font-size: 0.7rem;
     gap: 8px;
   }
-  
+
   .sidebar-section-title {
     padding: 5px 15px;
     font-size: 0.6rem;
   }
-  
+
   .nav-icon-img {
     width: 16px;
     height: 16px;
     min-width: 16px;
   }
-  
+
   .top-bar {
     padding: 12px 20px;
   }
-  
+
   .top-bar-left h1 {
     font-size: 1.1rem;
     font-weight: 500;
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
   }
-  
+
   .avatar {
     padding: 6px 12px;
   }
-  
+
   .stats-container {
     padding: 15px;
     gap: 12px;
   }
-  
+
   .stat-card {
     min-width: calc(33.33% - 12px);
     padding: 12px;
   }
-  
+
   .stat-card h3 {
     font-size: 0.7rem;
   }
-  
+
   .stat-number {
     font-size: 1.2rem;
   }
-  
+
   .content-area {
     padding: 0 15px 15px 15px;
   }
-  
+
   .system-log-section {
     margin: 0 15px 15px 15px;
     padding: 15px;
   }
-  
+
   .system-log-table th,
   .system-log-table td {
     padding: 10px 12px;
   }
-  
+
   .log-item-title {
     font-size: 0.85rem;
   }
-  
-  .log-view-btn {
-    padding: 4px 12px;
-    font-size: 0.65rem;
-  }
-  
+
   .log-status-badge {
     min-width: 70px;
     padding: 3px 8px;
@@ -701,7 +764,7 @@
   .stats-container {
     flex-direction: column;
   }
-  
+
   .stat-card {
     min-width: 100%;
   }
@@ -711,20 +774,20 @@
   .sidebar {
     width: 160px;
   }
-  
+
   .sidebar-header h2 {
     font-size: 0.8rem;
   }
-  
+
   .nav-item {
     padding: 5px 10px;
     font-size: 0.6rem;
   }
-  
+
   .sidebar-section-title {
     font-size: 0.5rem;
   }
-  
+
   .avatar-dropdown-menu {
     min-width: 130px;
   }

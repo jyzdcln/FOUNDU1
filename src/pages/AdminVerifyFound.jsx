@@ -26,8 +26,9 @@ const AdminVerifyFound = () => {
   const loadSubmissions = async () => {
     setLoading(true);
     const { data, error } = await supabase
-      .from('found_lost_items')
-      .select(`
+      .from("found_lost_items")
+      .select(
+        `
         *,
         lost_report:lost_report_id (
           id,
@@ -39,8 +40,9 @@ const AdminVerifyFound = () => {
           users:user_id (name, email)
         ),
         finder:finder_id (name, email)
-      `)
-      .order('submitted_at', { ascending: false });
+      `,
+      )
+      .order("submitted_at", { ascending: false });
 
     if (error) {
       console.error("Error loading submissions:", error);
@@ -53,19 +55,22 @@ const AdminVerifyFound = () => {
 
   const filterSubmissions = () => {
     let filtered = [...submissions];
-    
+
     if (statusFilter !== "all") {
-      filtered = filtered.filter(s => s.status === statusFilter);
+      filtered = filtered.filter((s) => s.status === statusFilter);
     }
-    
+
     if (searchTerm) {
-      filtered = filtered.filter(s => 
-        s.lost_report?.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        s.finder_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        s.finder_contact?.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(
+        (s) =>
+          s.lost_report?.title
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          s.finder_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          s.finder_contact?.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
-    
+
     setFilteredSubmissions(filtered);
   };
 
@@ -79,49 +84,59 @@ const AdminVerifyFound = () => {
       alert("Please provide a reason for rejection.");
       return;
     }
-    
+
     const confirmed = window.confirm(
       `Reject this submission?\n\n` +
-      `Item: ${submission.lost_report?.title}\n` +
-      `Finder: ${submission.finder_name}\n\n` +
-      `Reason: ${rejectReason}`
+        `Item: ${submission.lost_report?.title}\n` +
+        `Finder: ${submission.finder_name}\n\n` +
+        `Reason: ${rejectReason}`,
     );
-    
+
     if (!confirmed) return;
-    
+
     setIsRejecting(true);
-    
+
     try {
       const { error: updateError } = await supabase
-        .from('found_lost_items')
-        .update({ 
-          status: 'rejected',
+        .from("found_lost_items")
+        .update({
+          status: "rejected",
           reviewed_at: new Date(),
-          admin_notes: rejectReason
+          admin_notes: rejectReason,
         })
-        .eq('id', submission.id);
-      
+        .eq("id", submission.id);
+
       if (updateError) throw updateError;
-      
-      await supabase
-        .from('notifications')
-        .insert({
-          user_id: submission.finder_id,
-          type: 'submission_rejected',
-          message: `Your submission for "${submission.lost_report?.title}" was rejected. Reason: ${rejectReason}`,
-          created_at: new Date()
-        });
-      
-      alert("Submission rejected.");
+
+      const { error: reportUpdateError } = await supabase
+        .from("reports")
+        .update({
+          status: "rejected",
+          rejection_reason: rejectReason,
+          admin_notes: rejectReason,
+        })
+        .eq("id", submission.lost_report_id);
+
+      if (reportUpdateError) {
+        console.error("Error updating reports table:", reportUpdateError);
+      }
+
+      await supabase.from("notifications").insert({
+        user_id: submission.finder_id,
+        type: "submission_rejected",
+        message: `Your submission for "${submission.lost_report?.title}" was rejected. Reason: ${rejectReason}`,
+        created_at: new Date(),
+      });
+
+      alert("Submission rejected. Student has been notified.");
       loadSubmissions();
       setShowModal(false);
       setRejectReason("");
-      
     } catch (error) {
       console.error("Error rejecting submission:", error);
       alert("Error rejecting submission. Please try again.");
     }
-    
+
     setIsRejecting(false);
   };
 
@@ -138,12 +153,12 @@ const AdminVerifyFound = () => {
   };
 
   const getStatusBadge = (status) => {
-    switch(status) {
-      case 'pending':
+    switch (status) {
+      case "pending":
         return <span className="verify-found-status pending">Pending</span>;
-      case 'approved':
+      case "approved":
         return <span className="verify-found-status approved">Approved</span>;
-      case 'rejected':
+      case "rejected":
         return <span className="verify-found-status rejected">Rejected</span>;
       default:
         return <span className="verify-found-status pending">{status}</span>;
@@ -153,16 +168,20 @@ const AdminVerifyFound = () => {
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
-  const pendingCount = submissions.filter(s => s.status === "pending").length;
-  const approvedCount = submissions.filter(s => s.status === "approved").length;
-  const rejectedCount = submissions.filter(s => s.status === "rejected").length;
+  const pendingCount = submissions.filter((s) => s.status === "pending").length;
+  const approvedCount = submissions.filter(
+    (s) => s.status === "approved",
+  ).length;
+  const rejectedCount = submissions.filter(
+    (s) => s.status === "rejected",
+  ).length;
 
   if (loading) {
     return (
@@ -174,8 +193,7 @@ const AdminVerifyFound = () => {
 
   return (
     <div className="verify-found-container">
-      <div className="verify-found-header">
-      </div>
+      <div className="verify-found-header"></div>
 
       <div className="verify-found-stats">
         <div className="verify-found-stat-card">
@@ -201,29 +219,33 @@ const AdminVerifyFound = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="verify-found-search-input"
           />
-          <img src={searchIcon} alt="search" className="verify-found-search-icon" />
+          <img
+            src={searchIcon}
+            alt="search"
+            className="verify-found-search-icon"
+          />
         </div>
 
         <div className="verify-found-status-filter">
-          <button 
+          <button
             className={`verify-found-filter-btn ${statusFilter === "all" ? "active" : ""}`}
             onClick={() => setStatusFilter("all")}
           >
             All ({submissions.length})
           </button>
-          <button 
+          <button
             className={`verify-found-filter-btn ${statusFilter === "pending" ? "active" : ""}`}
             onClick={() => setStatusFilter("pending")}
           >
             Pending ({pendingCount})
           </button>
-          <button 
+          <button
             className={`verify-found-filter-btn ${statusFilter === "approved" ? "active" : ""}`}
             onClick={() => setStatusFilter("approved")}
           >
             Approved ({approvedCount})
           </button>
-          <button 
+          <button
             className={`verify-found-filter-btn ${statusFilter === "rejected" ? "active" : ""}`}
             onClick={() => setStatusFilter("rejected")}
           >
@@ -243,42 +265,57 @@ const AdminVerifyFound = () => {
               <div className="verify-found-card-header">
                 <div className="verify-found-card-title">
                   <h3>{submission.lost_report?.title || "Unknown Item"}</h3>
-                  <span className="verify-found-category">{submission.lost_report?.category}</span>
+                  <span className="verify-found-category">
+                    {submission.lost_report?.category}
+                  </span>
                 </div>
                 {getStatusBadge(submission.status)}
               </div>
-              
+
               <div className="verify-found-card-body">
                 <div className="verify-found-detail-row">
                   <span className="verify-found-detail-label">Finder:</span>
-                  <span className="verify-found-detail-value">{submission.finder_name}</span>
+                  <span className="verify-found-detail-value">
+                    {submission.finder_name}
+                  </span>
                 </div>
                 <div className="verify-found-detail-row">
                   <span className="verify-found-detail-label">Contact:</span>
-                  <span className="verify-found-detail-value">{submission.finder_contact}</span>
+                  <span className="verify-found-detail-value">
+                    {submission.finder_contact}
+                  </span>
                 </div>
                 <div className="verify-found-detail-row">
                   <span className="verify-found-detail-label">Location:</span>
-                  <span className="verify-found-detail-value">{submission.lost_report?.location}</span>
+                  <span className="verify-found-detail-value">
+                    {submission.lost_report?.location}
+                  </span>
                 </div>
                 <div className="verify-found-detail-row">
                   <span className="verify-found-detail-label">Submitted:</span>
-                  <span className="verify-found-detail-value">{formatDate(submission.submitted_at)}</span>
+                  <span className="verify-found-detail-value">
+                    {formatDate(submission.submitted_at)}
+                  </span>
                 </div>
                 <div className="verify-found-detail-row verify-found-message">
                   <span className="verify-found-detail-label">Message:</span>
-                  <span className="verify-found-detail-value">{submission.finder_message}</span>
+                  <span className="verify-found-detail-value">
+                    {submission.finder_message}
+                  </span>
                 </div>
                 {submission.finder_photo_url && (
                   <div className="verify-found-photo">
-                    <img src={submission.finder_photo_url} alt="Found item proof" />
+                    <img
+                      src={submission.finder_photo_url}
+                      alt="Found item proof"
+                    />
                   </div>
                 )}
               </div>
-              
+
               <div className="verify-found-card-footer">
                 {submission.status === "pending" && (
-                  <button 
+                  <button
                     className="verify-found-view-btn"
                     onClick={() => openModal(submission)}
                   >
@@ -286,7 +323,7 @@ const AdminVerifyFound = () => {
                   </button>
                 )}
                 {submission.status !== "pending" && (
-                  <button 
+                  <button
                     className="verify-found-view-btn verify-found-view-only"
                     onClick={() => openModal(submission)}
                   >
@@ -301,30 +338,45 @@ const AdminVerifyFound = () => {
 
       {showModal && selectedSubmission && (
         <div className="verify-found-modal-overlay" onClick={closeModal}>
-          <div className="verify-found-modal-container" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="verify-found-modal-container"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="verify-found-modal-header">
               <h2>Verify Found Item Submission</h2>
-              <button className="verify-found-modal-close" onClick={closeModal}>×</button>
+              <button className="verify-found-modal-close" onClick={closeModal}>
+                ×
+              </button>
             </div>
-            
+
             <div className="verify-found-modal-body">
               <div className="verify-found-modal-section">
                 <h4>Lost Item Information</h4>
                 <div className="verify-found-modal-row">
                   <span className="verify-found-modal-label">Item:</span>
-                  <span className="verify-found-modal-value">{selectedSubmission.lost_report?.title}</span>
+                  <span className="verify-found-modal-value">
+                    {selectedSubmission.lost_report?.title}
+                  </span>
                 </div>
                 <div className="verify-found-modal-row">
                   <span className="verify-found-modal-label">Category:</span>
-                  <span className="verify-found-modal-value">{selectedSubmission.lost_report?.category}</span>
+                  <span className="verify-found-modal-value">
+                    {selectedSubmission.lost_report?.category}
+                  </span>
                 </div>
                 <div className="verify-found-modal-row">
-                  <span className="verify-found-modal-label">Location Lost:</span>
-                  <span className="verify-found-modal-value">{selectedSubmission.lost_report?.location}</span>
+                  <span className="verify-found-modal-label">
+                    Location Lost:
+                  </span>
+                  <span className="verify-found-modal-value">
+                    {selectedSubmission.lost_report?.location}
+                  </span>
                 </div>
                 <div className="verify-found-modal-row">
                   <span className="verify-found-modal-label">Description:</span>
-                  <span className="verify-found-modal-value">{selectedSubmission.lost_report?.description}</span>
+                  <span className="verify-found-modal-value">
+                    {selectedSubmission.lost_report?.description}
+                  </span>
                 </div>
               </div>
 
@@ -332,19 +384,28 @@ const AdminVerifyFound = () => {
                 <h4>Finder Information</h4>
                 <div className="verify-found-modal-row">
                   <span className="verify-found-modal-label">Name:</span>
-                  <span className="verify-found-modal-value">{selectedSubmission.finder_name}</span>
+                  <span className="verify-found-modal-value">
+                    {selectedSubmission.finder_name}
+                  </span>
                 </div>
                 <div className="verify-found-modal-row">
                   <span className="verify-found-modal-label">Contact:</span>
-                  <span className="verify-found-modal-value">{selectedSubmission.finder_contact}</span>
+                  <span className="verify-found-modal-value">
+                    {selectedSubmission.finder_contact}
+                  </span>
                 </div>
                 <div className="verify-found-modal-row">
                   <span className="verify-found-modal-label">Message:</span>
-                  <span className="verify-found-modal-value">{selectedSubmission.finder_message}</span>
+                  <span className="verify-found-modal-value">
+                    {selectedSubmission.finder_message}
+                  </span>
                 </div>
                 {selectedSubmission.finder_photo_url && (
                   <div className="verify-found-modal-photo">
-                    <img src={selectedSubmission.finder_photo_url} alt="Proof" />
+                    <img
+                      src={selectedSubmission.finder_photo_url}
+                      alt="Proof"
+                    />
                   </div>
                 )}
               </div>
@@ -373,17 +434,17 @@ const AdminVerifyFound = () => {
                 </div>
               )}
             </div>
-            
+
             <div className="verify-found-modal-footer">
               {selectedSubmission.status === "pending" && (
                 <>
-                  <button 
+                  <button
                     className="verify-found-modal-approve"
                     onClick={() => handleApprove(selectedSubmission)}
                   >
                     Create Report
                   </button>
-                  <button 
+                  <button
                     className="verify-found-modal-reject"
                     onClick={() => handleReject(selectedSubmission)}
                     disabled={isRejecting}
@@ -392,7 +453,12 @@ const AdminVerifyFound = () => {
                   </button>
                 </>
               )}
-              <button className="verify-found-modal-close-btn" onClick={closeModal}>Cancel</button>
+              <button
+                className="verify-found-modal-close-btn"
+                onClick={closeModal}
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>

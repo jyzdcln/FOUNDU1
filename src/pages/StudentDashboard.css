@@ -5,13 +5,13 @@
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .student-dashboard-container {
   min-height: 100vh;
   background: #f5f7fa;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   scrollbar-width: none;
   -ms-overflow-style: none;
   overflow-y: auto;
@@ -87,16 +87,22 @@ body {
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
+  padding-top: 30px;
 }
 
 .report-new-item-section {
-  margin-bottom: 24px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
 .report-dropdown {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .report-dropdown-btn {
@@ -112,6 +118,7 @@ body {
   font-size: 0.8rem;
   font-weight: 600;
   transition: background 0.2s;
+  line-height: 1;
 }
 
 .report-dropdown-btn:hover {
@@ -154,6 +161,22 @@ body {
   color: white;
 }
 
+.my-dashboard-title {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.my-dashboard-title h2 {
+  font-size: 1.5rem;
+  color: #2c3e50;
+  margin: 0;
+  padding: 0;
+  font-weight: 700;
+  text-align: left;
+  line-height: 38px;
+}
 .student-stats-cards {
   display: flex;
   gap: 20px;
@@ -434,41 +457,45 @@ body {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @media (max-width: 768px) {
   .student-stats-cards {
     flex-direction: column;
   }
-  
+
   .report-new-item-section {
     justify-content: center;
   }
-  
+
   .report-dropdown-menu {
     right: auto;
     left: 0;
   }
-  
+
   .my-report-card {
     flex-direction: column;
     align-items: stretch;
     text-align: center;
   }
-  
+
   .my-report-info h4,
   .my-report-reported,
   .my-report-meta {
     text-align: center;
     justify-content: center;
   }
-  
+
   .my-report-action {
     justify-content: center;
   }
-  
+
   .edit-report-btn {
     width: 100%;
   }

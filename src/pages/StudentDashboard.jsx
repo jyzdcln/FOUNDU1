@@ -4,7 +4,12 @@ import "./StudentDashboard.css";
 import "./StudentDashboardBrowse.css";
 import MyClaims from "./MyClaims";
 
-import { getReports, getReportsByUser, getStudentNotifications, subscribeToStatusChanges } from "../services/reportService";
+import {
+  getReports,
+  getReportsByUser,
+  getStudentNotifications,
+  subscribeToStatusChanges,
+} from "../services/reportService";
 import founduLogo from "../assets/icons/foundulogo-icon.png";
 import studentUserIcon from "../assets/icons/admin-user-icon.png";
 import studentDropdownIcon from "../assets/icons/admin-dropdown-icon.png";
@@ -38,11 +43,11 @@ const StudentDashboard = () => {
   const userDropdownRef = useRef(null);
   const reportDropdownRef = useRef(null);
   const notificationRef = useRef(null);
-  
+
   const [filters, setFilters] = useState({
     keyword: "",
     category: "All Categories",
-    type: "All"
+    type: "All",
   });
 
   useEffect(() => {
@@ -55,12 +60,10 @@ const StudentDashboard = () => {
     if (location.state?.showBrowse !== undefined) {
       setShowBrowse(location.state.showBrowse);
       setShowMyClaims(false);
-    }
-    else if (location.state?.showMyClaims !== undefined) {
+    } else if (location.state?.showMyClaims !== undefined) {
       setShowMyClaims(location.state.showMyClaims);
       setShowBrowse(false);
-    }
-    else if (!location.state) {
+    } else if (!location.state) {
       setShowBrowse(true);
       setShowMyClaims(false);
     }
@@ -74,13 +77,22 @@ const StudentDashboard = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target)) {
+      if (
+        userDropdownRef.current &&
+        !userDropdownRef.current.contains(event.target)
+      ) {
         setIsUserDropdownOpen(false);
       }
-      if (reportDropdownRef.current && !reportDropdownRef.current.contains(event.target)) {
+      if (
+        reportDropdownRef.current &&
+        !reportDropdownRef.current.contains(event.target)
+      ) {
         setIsReportDropdownOpen(false);
       }
-      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target)
+      ) {
         setIsNotificationOpen(false);
       }
     };
@@ -91,39 +103,44 @@ const StudentDashboard = () => {
   }, []);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
     if (!user.id) return;
-    
+
     const subscription = supabase
-      .channel('student-reports-channel')
-      .on('postgres_changes', 
-        { 
-          event: 'UPDATE', 
-          schema: 'public', 
-          table: 'reports',
-          filter: `user_id=eq.${user.id}`
+      .channel("student-reports-channel")
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "reports",
+          filter: `user_id=eq.${user.id}`,
         },
         async (payload) => {
-          console.log('Your report status changed!', payload);
-          
+          console.log("Your report status changed!", payload);
+
           await loadReports();
           await loadUserReports();
           await loadNotifications();
-          
+
           const newStatus = payload.new.status;
           const reportTitle = payload.new.title;
-          
-          if (newStatus === 'verified') {
+
+          if (newStatus === "verified") {
             alert(`Good news! Your report "${reportTitle}" has been verified!`);
-          } else if (newStatus === 'returned') {
-            alert(`Your report "${reportTitle}" needs attention. Please edit and resubmit.`);
-          } else if (newStatus === 'rejected') {
-            alert(`Your report "${reportTitle}" was rejected. Please contact admin.`);
+          } else if (newStatus === "returned") {
+            alert(
+              `Your report "${reportTitle}" needs attention. Please edit and resubmit.`,
+            );
+          } else if (newStatus === "rejected") {
+            alert(
+              `Your report "${reportTitle}" was rejected. Please contact admin.`,
+            );
           }
-        }
+        },
       )
       .subscribe();
-    
+
     return () => {
       subscription.unsubscribe();
     };
@@ -133,14 +150,14 @@ const StudentDashboard = () => {
     setInitialLoading(true);
     const allReports = await getReports();
     setReports(allReports);
-    
+
     setTimeout(() => {
       setInitialLoading(false);
     }, 500);
   };
 
   const loadUserReports = async () => {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
     if (user.id) {
       const reports = await getReportsByUser(user.id);
       setUserReports(reports);
@@ -148,7 +165,7 @@ const StudentDashboard = () => {
   };
 
   const loadNotifications = async () => {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
     if (user.id) {
       const notifs = await getStudentNotifications(user.id);
       setNotifications(notifs);
@@ -156,23 +173,28 @@ const StudentDashboard = () => {
   };
 
   const applyFilters = () => {
-    let filtered = reports.filter(report => report.status === "verified");
-    
+    let filtered = reports.filter((report) => report.status === "verified");
+
     if (filters.keyword) {
-      filtered = filtered.filter(report => 
-        report.title?.toLowerCase().includes(filters.keyword.toLowerCase()) ||
-        report.description?.toLowerCase().includes(filters.keyword.toLowerCase())
+      filtered = filtered.filter(
+        (report) =>
+          report.title?.toLowerCase().includes(filters.keyword.toLowerCase()) ||
+          report.description
+            ?.toLowerCase()
+            .includes(filters.keyword.toLowerCase()),
       );
     }
-    
+
     if (filters.category !== "All Categories") {
-      filtered = filtered.filter(report => report.category === filters.category);
+      filtered = filtered.filter(
+        (report) => report.category === filters.category,
+      );
     }
-    
+
     if (filters.type !== "All") {
-      filtered = filtered.filter(report => report.type === filters.type);
+      filtered = filtered.filter((report) => report.type === filters.type);
     }
-    
+
     setFilteredReports(filtered);
   };
 
@@ -218,22 +240,28 @@ const StudentDashboard = () => {
   };
 
   const markNotificationAsRead = async (id) => {
-    setNotifications(notifications.map(notif => 
-      notif.id === id ? { ...notif, read: true } : notif
-    ));
+    setNotifications(
+      notifications.map((notif) =>
+        notif.id === id ? { ...notif, read: true } : notif,
+      ),
+    );
   };
 
   const formatDate = (dateString) => {
     if (!dateString) return "Invalid Date";
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+    });
   };
 
   const formatTimeAgo = (dateString) => {
     const date = new Date(dateString);
     const now = new Date();
     const seconds = Math.floor((now - date) / 1000);
-    
+
     if (seconds < 60) return `${seconds} seconds ago`;
     const minutes = Math.floor(seconds / 60);
     if (minutes < 60) return `${minutes} minutes ago`;
@@ -245,21 +273,26 @@ const StudentDashboard = () => {
   };
 
   const handleFilterChange = (key, value) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
+    setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   const resetFilters = () => {
     setFilters({
       keyword: "",
       category: "All Categories",
-      type: "All"
+      type: "All",
     });
   };
 
-  const uniqueCategories = ["All Categories", ...new Set(reports.map(r => r.category).filter(Boolean))];
+  const uniqueCategories = [
+    "All Categories",
+    ...new Set(reports.map((r) => r.category).filter(Boolean)),
+  ];
 
-  const reportsNeedingAttention = userReports.filter(r => r.status === "returned" || r.status === "pending");
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const reportsNeedingAttention = userReports.filter(
+    (r) => r.status === "returned" || r.status === "pending",
+  );
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
   if (initialLoading && reports.length === 0) {
     return (
@@ -276,10 +309,18 @@ const StudentDashboard = () => {
               <div className="user-dropdown">
                 <div className="user-dropdown-trigger">
                   <div className="user-icon">
-                    <img src={studentUserIcon} alt="user" className="user-icon-img" />
+                    <img
+                      src={studentUserIcon}
+                      alt="user"
+                      className="user-icon-img"
+                    />
                   </div>
                   <div className="dropdown-icon">
-                    <img src={studentDropdownIcon} alt="dropdown" className="dropdown-icon-img" />
+                    <img
+                      src={studentDropdownIcon}
+                      alt="dropdown"
+                      className="dropdown-icon-img"
+                    />
                   </div>
                 </div>
               </div>
@@ -302,14 +343,26 @@ const StudentDashboard = () => {
             <img src={founduLogo} alt="FoundU" className="student-logo-img" />
           </div>
           <div className="student-header-actions">
-            <span className="student-lang" onClick={handleBrowse}>Browse</span>
-            <span className="student-lang" onClick={handleMyClaims}>My Claims</span>
-            <span className="student-lang" onClick={handleDashboard}>Dashboard</span>
-            
+            <span className="student-lang" onClick={handleBrowse}>
+              Browse
+            </span>
+            <span className="student-lang" onClick={handleMyClaims}>
+              My Claims
+            </span>
+            <span className="student-lang" onClick={handleDashboard}>
+              Dashboard
+            </span>
+
             <div className="notification-bell" ref={notificationRef}>
               <div className="notification-icon" onClick={toggleNotification}>
-                <img src={notificationIcon} alt="notifications" className="notification-icon-img" />
-                {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
+                <img
+                  src={notificationIcon}
+                  alt="notifications"
+                  className="notification-icon-img"
+                />
+                {unreadCount > 0 && (
+                  <span className="notification-badge">{unreadCount}</span>
+                )}
               </div>
               {isNotificationOpen && (
                 <div className="notification-dropdown">
@@ -320,20 +373,26 @@ const StudentDashboard = () => {
                     {notifications.length === 0 ? (
                       <div className="notification-item">
                         <div className="notification-content">
-                          <p className="notification-message">No notifications</p>
+                          <p className="notification-message">
+                            No notifications
+                          </p>
                           <span className="notification-time">---</span>
                         </div>
                       </div>
                     ) : (
                       notifications.map((notif, index) => (
-                        <div 
-                          key={index} 
-                          className={`notification-item ${!notif.read ? 'unread' : ''}`}
+                        <div
+                          key={index}
+                          className={`notification-item ${!notif.read ? "unread" : ""}`}
                           onClick={() => markNotificationAsRead(notif.id)}
                         >
                           <div className="notification-content">
-                            <p className="notification-message">{notif.message}</p>
-                            <span className="notification-time">{notif.time}</span>
+                            <p className="notification-message">
+                              {notif.message}
+                            </p>
+                            <span className="notification-time">
+                              {notif.time}
+                            </span>
                           </div>
                         </div>
                       ))
@@ -344,15 +403,23 @@ const StudentDashboard = () => {
             </div>
 
             <div className="user-dropdown" ref={userDropdownRef}>
-              <div 
-                className="user-dropdown-trigger" 
+              <div
+                className="user-dropdown-trigger"
                 onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
               >
                 <div className="user-icon">
-                  <img src={studentUserIcon} alt="user" className="user-icon-img" />
+                  <img
+                    src={studentUserIcon}
+                    alt="user"
+                    className="user-icon-img"
+                  />
                 </div>
                 <div className="dropdown-icon">
-                  <img src={studentDropdownIcon} alt="dropdown" className="dropdown-icon-img" />
+                  <img
+                    src={studentDropdownIcon}
+                    alt="dropdown"
+                    className="dropdown-icon-img"
+                  />
                 </div>
               </div>
               {isUserDropdownOpen && (
@@ -373,20 +440,33 @@ const StudentDashboard = () => {
         ) : !showBrowse ? (
           <>
             <div className="report-new-item-section">
+              <div className="my-dashboard-title">
+                <h2>My Dashboard</h2>
+              </div>
               <div className="report-dropdown" ref={reportDropdownRef}>
-                <button 
+                <button
                   className="report-dropdown-btn"
                   onClick={() => setIsReportDropdownOpen(!isReportDropdownOpen)}
                 >
                   Report New Item
-                  <img src={studentDropdownIcon} alt="dropdown" className="report-dropdown-arrow" />
+                  <img
+                    src={studentDropdownIcon}
+                    alt="dropdown"
+                    className="report-dropdown-arrow"
+                  />
                 </button>
                 {isReportDropdownOpen && (
                   <div className="report-dropdown-menu">
-                    <button className="report-dropdown-item" onClick={handleReportLost}>
+                    <button
+                      className="report-dropdown-item"
+                      onClick={handleReportLost}
+                    >
                       Report Lost Item
                     </button>
-                    <button className="report-dropdown-item" onClick={handleReportFound}>
+                    <button
+                      className="report-dropdown-item"
+                      onClick={handleReportFound}
+                    >
                       Report Found Item
                     </button>
                   </div>
@@ -396,16 +476,20 @@ const StudentDashboard = () => {
 
             <div className="student-stats-cards">
               <div className="student-stat-card">
-                <div className="student-stat-value">{reports.length}</div>
+                <div className="student-stat-value">
+                  {userReports.filter((r) => r.type === "lost").length}
+                </div>
+                <div className="student-stat-label">ITEM YOU LOST</div>
+              </div>
+              <div className="student-stat-card">
+                <div className="student-stat-value">
+                  {userReports.filter((r) => r.type === "found").length}
+                </div>
+                <div className="student-stat-label">ITEM YOU FOUND</div>
+              </div>
+              <div className="student-stat-card">
+                <div className="student-stat-value">{userReports.length}</div>
                 <div className="student-stat-label">TOTAL REPORTS</div>
-              </div>
-              <div className="student-stat-card">
-                <div className="student-stat-value">{reports.filter(r => r.type === "lost").length}</div>
-                <div className="student-stat-label">LOST ITEMS</div>
-              </div>
-              <div className="student-stat-card">
-                <div className="student-stat-value">{reports.filter(r => r.type === "found").length}</div>
-                <div className="student-stat-label">FOUND ITEMS</div>
               </div>
             </div>
 
@@ -413,21 +497,27 @@ const StudentDashboard = () => {
               <div className="my-reports-section">
                 <h3>My Reports Needing Attention</h3>
                 <div className="my-reports-list">
-                  {reportsNeedingAttention.map(report => (
+                  {reportsNeedingAttention.map((report) => (
                     <div key={report.id} className="my-report-card">
                       <div className="my-report-info">
                         <h4>{report.title}</h4>
-                        <p className="my-report-reported">Reported: {formatDate(report.created_at)}</p>
+                        <p className="my-report-reported">
+                          Reported: {formatDate(report.created_at)}
+                        </p>
                         <div className="my-report-meta">
-                          <span className="my-report-category">{report.category || "Uncategorized"}</span>
+                          <span className="my-report-category">
+                            {report.category || "Uncategorized"}
+                          </span>
                           <span className={`my-report-status ${report.status}`}>
-                            {report.status === "returned" ? "RETURNED" : "PENDING"}
+                            {report.status === "returned"
+                              ? "RETURNED"
+                              : "PENDING"}
                           </span>
                         </div>
                       </div>
                       <div className="my-report-action">
                         {report.status === "returned" && (
-                          <button 
+                          <button
                             className="edit-report-btn"
                             onClick={() => {
                               setSelectedReportForEdit(report);
@@ -450,75 +540,98 @@ const StudentDashboard = () => {
               <div className="browse-sidebar-section">
                 <h3>Search Item</h3>
               </div>
-              
+
               <div className="browse-sidebar-section">
                 <h3>KEYWORDS</h3>
                 <div className="browse-keyword-wrapper">
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     className="browse-keyword-input"
                     placeholder="Search..."
                     value={filters.keyword}
-                    onChange={(e) => handleFilterChange("keyword", e.target.value)}
+                    onChange={(e) =>
+                      handleFilterChange("keyword", e.target.value)
+                    }
                   />
-                  <img src={searchIcon} alt="search" className="browse-search-icon" />
+                  <img
+                    src={searchIcon}
+                    alt="search"
+                    className="browse-search-icon"
+                  />
                 </div>
               </div>
-              
+
               <div className="browse-sidebar-section">
                 <h3>CATEGORY</h3>
                 <div className="browse-category-wrapper">
-                  <select 
+                  <select
                     className="browse-category-select"
                     value={filters.category}
-                    onChange={(e) => handleFilterChange("category", e.target.value)}
+                    onChange={(e) =>
+                      handleFilterChange("category", e.target.value)
+                    }
                   >
-                    {uniqueCategories.map(cat => (
-                      <option key={cat} value={cat}>{cat}</option>
+                    {uniqueCategories.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
                     ))}
                   </select>
-                  <img src={downArrowIcon} alt="dropdown" className="browse-category-icon" />
+                  <img
+                    src={downArrowIcon}
+                    alt="dropdown"
+                    className="browse-category-icon"
+                  />
                 </div>
               </div>
-              
+
               <div className="browse-sidebar-section">
                 <h3>TYPE</h3>
                 <div className="browse-type-options">
                   <label className="browse-type-option">
-                    <input 
-                      type="radio" 
-                      name="type" 
-                      value="All" 
+                    <input
+                      type="radio"
+                      name="type"
+                      value="All"
                       checked={filters.type === "All"}
-                      onChange={(e) => handleFilterChange("type", e.target.value)}
+                      onChange={(e) =>
+                        handleFilterChange("type", e.target.value)
+                      }
                     />
                     All
                   </label>
                   <label className="browse-type-option">
-                    <input 
-                      type="radio" 
-                      name="type" 
-                      value="lost" 
+                    <input
+                      type="radio"
+                      name="type"
+                      value="lost"
                       checked={filters.type === "lost"}
-                      onChange={(e) => handleFilterChange("type", e.target.value)}
+                      onChange={(e) =>
+                        handleFilterChange("type", e.target.value)
+                      }
                     />
                     Lost
                   </label>
                   <label className="browse-type-option">
-                    <input 
-                      type="radio" 
-                      name="type" 
-                      value="found" 
+                    <input
+                      type="radio"
+                      name="type"
+                      value="found"
                       checked={filters.type === "found"}
-                      onChange={(e) => handleFilterChange("type", e.target.value)}
+                      onChange={(e) =>
+                        handleFilterChange("type", e.target.value)
+                      }
                     />
                     Found
                   </label>
                 </div>
               </div>
-              
+
               <div className="browse-sidebar-section">
-                <button className="browse-apply-filters-btn" onClick={applyFilters}>
+                <button
+                  className="browse-apply-filters-btn"
+                  onClick={applyFilters}
+                >
                   APPLY FILTERS
                 </button>
                 <button className="browse-reset-btn" onClick={resetFilters}>
@@ -526,17 +639,20 @@ const StudentDashboard = () => {
                 </button>
               </div>
             </div>
-            
+
             <div className="browse-content-area">
               <div className="browse-results-header">
                 <div className="browse-breadcrumb">
-                  <span className="browse-home-link" onClick={handleDashboard}>Home</span> / Browse Items
+                  <span className="browse-home-link" onClick={handleDashboard}>
+                    Home
+                  </span>{" "}
+                  / Browse Items
                 </div>
                 <div className="browse-results-count">
                   <strong>{filteredReports.length}</strong> items found
                 </div>
               </div>
-              
+
               <div className="browse-items-grid">
                 {filteredReports.length === 0 ? (
                   <div className="empty-state">
@@ -555,11 +671,15 @@ const StudentDashboard = () => {
                       <div className="browse-item-card-content">
                         <div className="browse-item-card-header">
                           <div className="browse-item-type-wrapper">
-                            <div className={`browse-item-type-badge ${report.type}`}>
+                            <div
+                              className={`browse-item-type-badge ${report.type}`}
+                            >
                               {report.type === "lost" ? "LOST" : "FOUND"}
                             </div>
                             <div className={`status-badge ${report.status}`}>
-                              {report.status === "verified" ? "Verified" : "Pending"}
+                              {report.status === "verified"
+                                ? "Verified"
+                                : "Pending"}
                             </div>
                           </div>
                           <div className="browse-item-date">
@@ -567,16 +687,24 @@ const StudentDashboard = () => {
                           </div>
                         </div>
                         <div className="browse-item-category">
-                          <img src={tagIcon} alt="category" className="browse-category-icon-img" />
+                          <img
+                            src={tagIcon}
+                            alt="category"
+                            className="browse-category-icon-img"
+                          />
                           {report.category || "Item"}
                         </div>
                         <div className="browse-item-title">{report.title}</div>
                         <div className="browse-item-location">
-                          <img src={locationIcon} alt="location" className="browse-location-icon-img" />
+                          <img
+                            src={locationIcon}
+                            alt="location"
+                            className="browse-location-icon-img"
+                          />
                           {report.location}
                         </div>
                       </div>
-                      <button 
+                      <button
                         className="browse-view-details-btn"
                         onClick={() => handleViewDetails(report.id)}
                       >
@@ -592,18 +720,24 @@ const StudentDashboard = () => {
       </div>
 
       {showReportLostModal && (
-        <ReportLostItemModal onClose={() => setShowReportLostModal(false)} onSuccess={() => {
-          loadReports();
-          loadUserReports();
-          loadNotifications();
-        }} />
+        <ReportLostItemModal
+          onClose={() => setShowReportLostModal(false)}
+          onSuccess={() => {
+            loadReports();
+            loadUserReports();
+            loadNotifications();
+          }}
+        />
       )}
       {showReportFoundModal && (
-        <ReportFoundItemModal onClose={() => setShowReportFoundModal(false)} onSuccess={() => {
-          loadReports();
-          loadUserReports();
-          loadNotifications();
-        }} />
+        <ReportFoundItemModal
+          onClose={() => setShowReportFoundModal(false)}
+          onSuccess={() => {
+            loadReports();
+            loadUserReports();
+            loadNotifications();
+          }}
+        />
       )}
       {showEditModal && selectedReportForEdit && (
         <StudentEditReportModal

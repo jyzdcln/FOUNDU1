@@ -60,7 +60,7 @@
 }
 
 .tab-btn.active::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -2px;
   left: 0;
@@ -89,7 +89,7 @@
   padding: 8px 16px;
   background: white;
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 20px;
   font-size: 0.85rem;
   cursor: pointer;
   min-width: 120px;
@@ -118,7 +118,7 @@
   min-width: 120px;
   z-index: 100;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .filter-dropdown-item {
@@ -200,7 +200,7 @@
 }
 
 .unclaimed-card:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .unclaimed-card.donation-card {
@@ -305,6 +305,7 @@
   color: #666;
   margin-bottom: 4px;
   text-align: left;
+  font-weight: 500;
 }
 
 .unclaimed-status {
@@ -332,7 +333,7 @@
   background: #2b5797;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 30px;
   cursor: pointer;
   font-size: 0.8rem;
 }
@@ -360,7 +361,7 @@
   background: #292929;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 30px;
   cursor: pointer;
   font-size: 0.8rem;
 }
@@ -386,38 +387,38 @@
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .unclaimed-tabs {
     flex-direction: column;
     gap: 8px;
     border-bottom: none;
   }
-  
+
   .tab-btn.active::after {
     display: none;
   }
-  
+
   .days-filter {
     flex-wrap: wrap;
   }
-  
+
   .filter-dropdown-btn {
     flex: 1;
   }
-  
+
   .unclaimed-card-content {
     flex-direction: column;
   }
-  
+
   .unclaimed-photo {
     width: 100%;
     height: 150px;
   }
-  
+
   .unclaimed-card-actions {
     flex-direction: column;
   }
-  
+
   .view-btn,
   .donate-btn,
   .delete-btn {

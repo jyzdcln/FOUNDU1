@@ -18,7 +18,7 @@
 
 .vr-header-row {
   display: flex;
-  justify-content:flex-end;
+  justify-content: flex-end;
   align-items: center;
   margin-bottom: 24px;
   padding-bottom: 16px;
@@ -41,7 +41,7 @@
 .vr-search-input {
   padding: 8px 36px 8px 12px;
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 20px;
   font-size: 0.85rem;
   width: 220px;
 }
@@ -70,7 +70,7 @@
   color: #333;
   border: 1px solid #ddd;
   padding: 8px 36px 8px 16px;
-  border-radius: 8px;
+  border-radius: 20px;
   cursor: pointer;
   font-size: 0.85rem;
   font-weight: 500;
@@ -87,7 +87,7 @@
   color: #333;
   border: 1px solid #ddd;
   padding: 8px 36px 8px 16px;
-  border-radius: 8px;
+  border-radius: 20px;
   cursor: pointer;
   font-size: 0.85rem;
   font-weight: 500;
@@ -325,6 +325,7 @@
 }
 
 .vr-modal-header {
+  background: #2b5797;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -334,7 +335,7 @@
 
 .vr-modal-header h2 {
   font-size: 1.3rem;
-  color: #1a2639;
+  color: white;
   margin: 0;
 }
 
@@ -343,7 +344,7 @@
   border: none;
   font-size: 28px;
   cursor: pointer;
-  color: #999;
+  color: white;
 }
 
 .vr-modal-body {
@@ -375,17 +376,17 @@
 .vr-modal-verify-btn {
   flex: 1;
   padding: 10px;
-  background: #28a745;
-  color: white;
-  border: none;
-  border-radius: 8px;
+  background: transparent;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 30px;
   cursor: pointer;
   font-size: 0.85rem;
   font-weight: 500;
 }
 
 .vr-modal-verify-btn:hover {
-  background: #218838;
+  border: 1px solid #aaa;
 }
 
 .vr-modal-edit-btn {
@@ -401,7 +402,7 @@
 }
 
 .vr-modal-edit-btn:hover {
-  background: none;
+  border: 1px solid #aaa;
 }
 
 .vr-modal-delete-btn {
@@ -419,6 +420,22 @@
 .vr-modal-delete-btn:hover {
   background: #c82333;
   color: #ffffff;
+}
+
+.vr-modal-return-btn {
+  flex: 1;
+  padding: 10px;
+  background: transparent;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.vr-modal-return-btn:hover {
+  border: 1px solid #aaa;
 }
 
 .vr-empty-state {
@@ -446,72 +463,60 @@
 }
 
 @keyframes vrSpin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @media (max-width: 768px) {
   .vr-reports-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .vr-header-row {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .vr-left-section {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .vr-search-input {
     width: 100%;
   }
-  
+
   .vr-category-dropdown-btn,
   .vr-status-dropdown-btn {
     width: 100%;
     text-align: left;
   }
-  
+
   .vr-category-dropdown-menu,
   .vr-status-dropdown-menu {
     width: 100%;
   }
-  
+
   .vr-modal-actions {
     flex-direction: column;
   }
 }
-.vr-modal-receive-btn {
-  flex: 1;
-  padding: 10px;
-  background: #17a2b8;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 500;
+.vr-status-pending {
+  color: #d97706;
+  font-weight: 600;
+  text-transform: lowercase;
 }
-
-.vr-modal-receive-btn:hover {
-  background: #138496;
+.vr-status-verified {
+  color: #059669;
+  font-weight: 600;
+  text-transform: lowercase;
 }
-
-.vr-modal-return-btn {
-  flex: 1;
-  padding: 10px;
-  background: #ffc107;
-  color: #333;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 500;
-}
-
-.vr-modal-return-btn:hover {
-  background: #e0a800;
+.vr-status-rejected {
+  color: #c82333;
+  font-weight: 600;
+  text-transform: lowercase;
 }

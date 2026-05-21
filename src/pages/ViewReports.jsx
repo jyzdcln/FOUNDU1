@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { updateReportStatus, deleteReport, getReports } from "../services/reportService";
+import {
+  updateReportStatus,
+  deleteReport,
+  getReports,
+} from "../services/reportService";
 import "./ViewReports.css";
 import locationIcon from "../assets/icons/location-icons.png";
 import searchIcon from "../assets/icons/Viewreport-icons.png";
 import downArrowIcon from "../assets/icons/down-arrow-icon.png";
 import ReturnToUserModal from "../components/admin/ReturnToUserModal";
 
-const ViewReports = ({ onRefresh }) => {
+const ViewReports = ({
+  onRefresh,
+  initialStatusFilter = "all",
+  selectedReportToView = null,
+  onClearSelectedReport = null,
+}) => {
   const [allReports, setAllReports] = useState([]);
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState(initialStatusFilter);
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [loading, setLoading] = useState(true);
@@ -18,6 +27,8 @@ const ViewReports = ({ onRefresh }) => {
   const [selectedReportForReturn, setSelectedReportForReturn] = useState(null);
   const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
+  const [hasProcessedSelectedReport, setHasProcessedSelectedReport] =
+    useState(false);
   const statusDropdownRef = React.useRef(null);
   const categoryDropdownRef = React.useRef(null);
 
@@ -26,11 +37,46 @@ const ViewReports = ({ onRefresh }) => {
   }, []);
 
   useEffect(() => {
+    if (initialStatusFilter) {
+      setStatusFilter(initialStatusFilter);
+    }
+  }, [initialStatusFilter]);
+
+  useEffect(() => {
+    if (
+      selectedReportToView &&
+      allReports.length > 0 &&
+      !hasProcessedSelectedReport
+    ) {
+      const report = allReports.find((r) => r.id === selectedReportToView.id);
+      if (report) {
+        setSelectedReport(report);
+        setShowDetailModal(true);
+        setHasProcessedSelectedReport(true);
+        if (onClearSelectedReport) {
+          onClearSelectedReport();
+        }
+      }
+    }
+  }, [
+    selectedReportToView,
+    allReports,
+    hasProcessedSelectedReport,
+    onClearSelectedReport,
+  ]);
+
+  useEffect(() => {
     const handleClickOutside = (event) => {
-      if (statusDropdownRef.current && !statusDropdownRef.current.contains(event.target)) {
+      if (
+        statusDropdownRef.current &&
+        !statusDropdownRef.current.contains(event.target)
+      ) {
         setIsStatusDropdownOpen(false);
       }
-      if (categoryDropdownRef.current && !categoryDropdownRef.current.contains(event.target)) {
+      if (
+        categoryDropdownRef.current &&
+        !categoryDropdownRef.current.contains(event.target)
+      ) {
         setIsCategoryDropdownOpen(false);
       }
     };
@@ -56,14 +102,6 @@ const ViewReports = ({ onRefresh }) => {
     setShowDetailModal(false);
   };
 
-  const handleReceive = async (id) => {
-    await updateReportStatus(id, "received");
-    await loadAllReports();
-    if (onRefresh) await onRefresh();
-    alert("Report marked as received.");
-    setShowDetailModal(false);
-  };
-
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this report?")) {
       await deleteReport(id);
@@ -75,7 +113,7 @@ const ViewReports = ({ onRefresh }) => {
   };
 
   const handleEdit = (report) => {
-    alert(`Edit function coming soon!\n\nItem: ${report.title}`);
+    alert(`This feature is under maintenance!`);
     setShowDetailModal(false);
   };
 
@@ -93,45 +131,65 @@ const ViewReports = ({ onRefresh }) => {
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+    });
   };
 
   const getFilteredReports = () => {
     let filtered = allReports;
-    
+
     if (statusFilter !== "all") {
-      filtered = filtered.filter(r => r.status === statusFilter);
+      filtered = filtered.filter((r) => r.status === statusFilter);
     }
-    
+
     if (searchTerm) {
-      filtered = filtered.filter(r => 
-        r.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        r.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        r.location?.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(
+        (r) =>
+          r.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          r.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          r.location?.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
-    
+
     if (categoryFilter !== "all") {
-      filtered = filtered.filter(r => r.category === categoryFilter);
+      filtered = filtered.filter((r) => r.category === categoryFilter);
     }
-    
+
     return filtered;
   };
 
   const filteredReports = getFilteredReports();
-  const pendingCount = allReports.filter(r => r.status === "pending").length;
-  const verifiedCount = allReports.filter(r => r.status === "verified").length;
-  const rejectedCount = allReports.filter(r => r.status === "rejected").length;
-  
-  const uniqueCategories = ["all", ...new Set(allReports.map(r => r.category).filter(Boolean))];
+  const pendingCount = allReports.filter((r) => r.status === "pending").length;
+  const verifiedCount = allReports.filter(
+    (r) => r.status === "verified",
+  ).length;
+  const claimedCount = allReports.filter((r) => r.status === "claimed").length;
+  const rejectedCount = allReports.filter(
+    (r) => r.status === "rejected",
+  ).length;
+
+  const uniqueCategories = [
+    "all",
+    ...new Set(allReports.map((r) => r.category).filter(Boolean)),
+  ];
 
   const getStatusLabel = () => {
-    switch(statusFilter) {
-      case "all": return `All (${allReports.length})`;
-      case "pending": return `Pending (${pendingCount})`;
-      case "verified": return `Verified (${verifiedCount})`;
-      case "rejected": return `Rejected (${rejectedCount})`;
-      default: return `All (${allReports.length})`;
+    switch (statusFilter) {
+      case "all":
+        return `All (${allReports.length})`;
+      case "pending":
+        return `Pending (${pendingCount})`;
+      case "verified":
+        return `Verified (${verifiedCount})`;
+      case "claimed":
+        return `Claimed (${claimedCount})`;
+      case "rejected":
+        return `Rejected (${rejectedCount})`;
+      default:
+        return `All (${allReports.length})`;
     }
   };
 
@@ -162,19 +220,23 @@ const ViewReports = ({ onRefresh }) => {
             />
             <img src={searchIcon} alt="search" className="vr-search-icon-img" />
           </div>
-          
+
           <div className="vr-category-dropdown" ref={categoryDropdownRef}>
-            <button 
+            <button
               className="vr-category-dropdown-btn"
               onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
             >
               {getCategoryLabel()}
-              <img src={downArrowIcon} alt="dropdown" className="vr-dropdown-arrow-img" />
+              <img
+                src={downArrowIcon}
+                alt="dropdown"
+                className="vr-dropdown-arrow-img"
+              />
             </button>
             {isCategoryDropdownOpen && (
               <div className="vr-category-dropdown-menu">
-                {uniqueCategories.map(cat => (
-                  <button 
+                {uniqueCategories.map((cat) => (
+                  <button
                     key={cat}
                     className={`vr-category-dropdown-item ${categoryFilter === cat ? "active" : ""}`}
                     onClick={() => {
@@ -190,16 +252,20 @@ const ViewReports = ({ onRefresh }) => {
           </div>
 
           <div className="vr-status-dropdown" ref={statusDropdownRef}>
-            <button 
+            <button
               className="vr-status-dropdown-btn"
               onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
             >
               {getStatusLabel()}
-              <img src={downArrowIcon} alt="dropdown" className="vr-dropdown-arrow-img" />
+              <img
+                src={downArrowIcon}
+                alt="dropdown"
+                className="vr-dropdown-arrow-img"
+              />
             </button>
             {isStatusDropdownOpen && (
               <div className="vr-status-dropdown-menu">
-                <button 
+                <button
                   className={`vr-status-dropdown-item ${statusFilter === "all" ? "active" : ""}`}
                   onClick={() => {
                     setStatusFilter("all");
@@ -208,7 +274,7 @@ const ViewReports = ({ onRefresh }) => {
                 >
                   All ({allReports.length})
                 </button>
-                <button 
+                <button
                   className={`vr-status-dropdown-item ${statusFilter === "pending" ? "active" : ""}`}
                   onClick={() => {
                     setStatusFilter("pending");
@@ -217,7 +283,7 @@ const ViewReports = ({ onRefresh }) => {
                 >
                   Pending ({pendingCount})
                 </button>
-                <button 
+                <button
                   className={`vr-status-dropdown-item ${statusFilter === "verified" ? "active" : ""}`}
                   onClick={() => {
                     setStatusFilter("verified");
@@ -226,7 +292,16 @@ const ViewReports = ({ onRefresh }) => {
                 >
                   Verified ({verifiedCount})
                 </button>
-                <button 
+                <button
+                  className={`vr-status-dropdown-item ${statusFilter === "claimed" ? "active" : ""}`}
+                  onClick={() => {
+                    setStatusFilter("claimed");
+                    setIsStatusDropdownOpen(false);
+                  }}
+                >
+                  Claimed ({claimedCount})
+                </button>
+                <button
                   className={`vr-status-dropdown-item ${statusFilter === "rejected" ? "active" : ""}`}
                   onClick={() => {
                     setStatusFilter("rejected");
@@ -265,14 +340,20 @@ const ViewReports = ({ onRefresh }) => {
                     {formatDate(report.created_at)}
                   </div>
                 </div>
-                <div className="vr-report-category">{report.category || "Item"}</div>
+                <div className="vr-report-category">
+                  {report.category || "Item"}
+                </div>
                 <div className="vr-report-title">{report.title}</div>
                 <div className="vr-report-location">
-                  <img src={locationIcon} alt="location" className="vr-location-icon" />
+                  <img
+                    src={locationIcon}
+                    alt="location"
+                    className="vr-location-icon"
+                  />
                   {report.location}
                 </div>
               </div>
-              <button 
+              <button
                 className="vr-view-details-btn"
                 onClick={() => handleViewDetails(report)}
               >
@@ -288,28 +369,60 @@ const ViewReports = ({ onRefresh }) => {
           <div className="vr-modal-container">
             <div className="vr-modal-header">
               <h2>{selectedReport.title}</h2>
-              <button className="vr-modal-close" onClick={() => setShowDetailModal(false)}>×</button>
+              <button
+                className="vr-modal-close"
+                onClick={() => {
+                  setShowDetailModal(false);
+                  setSelectedReport(null);
+                  setHasProcessedSelectedReport(false);
+                }}
+              >
+                ×
+              </button>
             </div>
             <div className="vr-modal-body">
               <div className="vr-modal-info">
-                <p><strong>Type:</strong> {selectedReport.type?.toUpperCase()}</p>
-                <p><strong>Category:</strong> {selectedReport.category}</p>
-                <p><strong>Location:</strong> {selectedReport.location}</p>
-                <p><strong>Date:</strong> {selectedReport.date || formatDate(selectedReport.created_at)}</p>
-                <p><strong>Description:</strong> {selectedReport.description}</p>
-                <p><strong>Reported by:</strong> {selectedReport.users?.name || selectedReport.users?.email || "Student"}</p>
-                <p><strong>Status:</strong> <span className={`vr-status-badge vr-status-${selectedReport.status}`}>{selectedReport.status?.toUpperCase()}</span></p>
+                <p>
+                  <strong>Type:</strong> {selectedReport.type?.toUpperCase()}
+                </p>
+                <p>
+                  <strong>Category:</strong> {selectedReport.category}
+                </p>
+                <p>
+                  <strong>Location:</strong> {selectedReport.location}
+                </p>
+                <p>
+                  <strong>Date:</strong>{" "}
+                  {selectedReport.date || formatDate(selectedReport.created_at)}
+                </p>
+                <p>
+                  <strong>Description:</strong> {selectedReport.description}
+                </p>
+                <p>
+                  <strong>Reported by:</strong>{" "}
+                  {selectedReport.users?.name ||
+                    selectedReport.users?.email ||
+                    "Student"}
+                </p>
+                <p>
+                  <strong>Status:</strong>{" "}
+                  <span
+                    className={`vr-status-badge vr-status-${selectedReport.status}`}
+                  >
+                    {selectedReport.status?.toUpperCase()}
+                  </span>
+                </p>
               </div>
               <div className="vr-modal-actions">
                 {selectedReport.status === "pending" && (
                   <>
-                    <button 
-                      className="vr-modal-receive-btn"
-                      onClick={() => handleReceive(selectedReport.id)}
+                    <button
+                      className="vr-modal-verify-btn"
+                      onClick={() => handleVerify(selectedReport.id)}
                     >
-                      Receive
+                      Verify
                     </button>
-                    <button 
+                    <button
                       className="vr-modal-return-btn"
                       onClick={() => handleReturnToUser(selectedReport)}
                     >
@@ -317,29 +430,13 @@ const ViewReports = ({ onRefresh }) => {
                     </button>
                   </>
                 )}
-                {selectedReport.status === "received" && (
-                  <>
-                    <button 
-                      className="vr-modal-verify-btn"
-                      onClick={() => handleVerify(selectedReport.id)}
-                    >
-                      Verify
-                    </button>
-                    <button 
-                      className="vr-modal-return-btn"
-                      onClick={() => handleReturnToUser(selectedReport)}
-                    >
-                      Return to User
-                    </button>
-                  </>
-                )}
-                <button 
+                <button
                   className="vr-modal-edit-btn"
                   onClick={() => handleEdit(selectedReport)}
                 >
                   Edit
                 </button>
-                <button 
+                <button
                   className="vr-modal-delete-btn"
                   onClick={() => handleDelete(selectedReport.id)}
                 >

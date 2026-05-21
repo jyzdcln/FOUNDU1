@@ -32,7 +32,7 @@
   text-align: center;
   flex: 1;
   min-width: 100px;
-  box-shadow:  1px 3px rgba(0,0,0,0.1);
+  box-shadow: 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .verify-found-stat-number {
@@ -66,10 +66,11 @@
   width: 100%;
   padding: 10px 14px 10px 38px;
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: 20px;
   font-size: 0.85rem;
   background: white;
   transition: all 0.2s;
+  justify-content: flex-end;
 }
 
 .verify-found-search-input:focus {
@@ -133,8 +134,12 @@
 }
 
 @keyframes verifyFoundSpin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .verify-found-empty {
@@ -221,6 +226,7 @@
   color: #6b7280;
   width: 85px;
   flex-shrink: 0;
+  text-align: left;
 }
 
 .verify-found-detail-value {
@@ -428,7 +434,7 @@
 .verify-found-modal-approve {
   flex: 1;
   background: transparent;
-  color:black;
+  color: #333;
   border: 1px solid #ccc;
   padding: 12px;
   border-radius: 30px;
@@ -439,7 +445,7 @@
 }
 
 .verify-found-modal-approve:hover {
-  background: rgb(230, 230, 230);;
+  border: 1px solid #aaa;
 }
 
 .verify-found-modal-approve:disabled {
@@ -459,7 +465,7 @@
   cursor: pointer;
   transition: background 0.2s;
   border: 1px solid #dc3545;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .verify-found-modal-reject:hover {
@@ -492,23 +498,23 @@
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .verify-found-search-box {
     flex: 1;
   }
-  
+
   .verify-found-list {
     grid-template-columns: 1fr;
   }
-  
+
   .verify-found-modal-footer {
     flex-direction: column;
   }
-  
+
   .verify-found-modal-row {
     flex-direction: column;
   }
-  
+
   .verify-found-modal-label {
     width: auto;
     margin-bottom: 4px;

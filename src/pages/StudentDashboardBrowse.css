@@ -13,7 +13,7 @@
   background: #f8f9fa;
   border-radius: 12px;
   padding: 20px;
-  border: 1px solid #ccc;
+  border:  #9ca3af;
 }
 
 .browse-sidebar-section {
@@ -21,9 +21,9 @@
 }
 
 .browse-sidebar-section h3 {
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 600;
-  color: #111827;
+  color: #9ca3af;
   margin-bottom: 12px;
   font-family: 'Inter', sans-serif;
   text-align: left;
