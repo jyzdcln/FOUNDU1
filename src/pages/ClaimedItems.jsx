@@ -138,6 +138,15 @@ const ClaimedItems = () => {
             .from("reports")
             .update({ status: "claimed" })
             .eq("id", claim.report_id);
+
+          await supabase.from("notifications").insert({
+            user_id: claim.student_id,
+            type: "claim_approved",
+            message: `Claim Approved! Your claim for "${claim.reports?.title}" has been approved. You can now pick up your item.`,
+            created_at: new Date(),
+            is_read: false,
+          });
+
           alert("Claim approved! Item marked as claimed.");
           loadClaims();
           setShowModal(false);
@@ -151,7 +160,16 @@ const ClaimedItems = () => {
                 "Claim rejected - insufficient proof or invalid claim",
             })
             .eq("id", claim.report_id);
-          alert("Claim rejected. Report status updated to rejected.");
+
+          await supabase.from("notifications").insert({
+            user_id: claim.student_id,
+            type: "claim_rejected",
+            message: `Claim Rejected! Your claim for "${claim.reports?.title}" was rejected. Reason: Insufficient proof or invalid claim. Please contact admin for more information.`,
+            created_at: new Date(),
+            is_read: false,
+          });
+
+          alert("Claim rejected. Student has been notified.");
           loadClaims();
           setShowModal(false);
         }
@@ -176,7 +194,6 @@ const ClaimedItems = () => {
         .from("claims")
         .update({
           status: "completed",
-          completed_at: new Date(),
         })
         .eq("id", claimId);
 
@@ -186,26 +203,19 @@ const ClaimedItems = () => {
         .from("reports")
         .update({
           status: "resolved",
-          resolved_at: new Date(),
           admin_notes: "Item returned to student",
         })
         .eq("id", reportId);
 
       if (reportError) throw reportError;
 
-      const { error: notifError } = await supabase
-        .from("notifications")
-        .insert({
-          user_id: studentId,
-          type: "item_returned",
-          message: `✅ Item Returned: "${itemTitle}" has been successfully returned to you. Thank you for using FoundU!`,
-          created_at: new Date(),
-          read: false,
-        });
-
-      if (notifError) {
-        console.error("Notification error:", notifError);
-      }
+      await supabase.from("notifications").insert({
+        user_id: studentId,
+        type: "item_returned",
+        message: `Item Returned: "${itemTitle}" has been successfully returned to you. Thank you for using FoundU!`,
+        created_at: new Date(),
+        is_read: false,
+      });
 
       alert(
         `"${itemTitle}" has been marked as returned. Student has been notified.`,

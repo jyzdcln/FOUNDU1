@@ -13,7 +13,8 @@
   background: #f8f9fa;
   border-radius: 12px;
   padding: 20px;
-  border:  #9ca3af;
+  border: #9ca3af;
+  box-shadow: 0px 1px 3px #999;
 }
 
 .browse-sidebar-section {
@@ -23,9 +24,9 @@
 .browse-sidebar-section h3 {
   font-size: 0.7rem;
   font-weight: 600;
-  color: #9ca3af;
+  color: #333;
   margin-bottom: 12px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   text-align: left;
 }
 
@@ -35,7 +36,7 @@
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   font-size: 0.8rem;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   outline: none;
   transition: border-color 0.2s;
   background: #f8f9fa;
@@ -51,7 +52,7 @@
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   font-size: 0.8rem;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   background: white;
   outline: none;
   cursor: pointer;
@@ -75,7 +76,7 @@
   cursor: pointer;
   font-size: 0.8rem;
   color: #374151;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .browse-type-option input {
@@ -93,7 +94,7 @@
   font-weight: 500;
   cursor: pointer;
   margin-bottom: 10px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   transition: background 0.2s;
 }
 
@@ -111,7 +112,7 @@
   font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   transition: all 0.2s;
 }
 
@@ -138,7 +139,7 @@
 .browse-breadcrumb {
   font-size: 0.8rem;
   color: #6b7280;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .browse-home-link {
@@ -153,7 +154,7 @@
 .browse-results-count {
   font-size: 0.8rem;
   color: #6b7280;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .browse-results-count strong {
@@ -174,6 +175,7 @@
   overflow: hidden;
   transition: all 0.2s ease;
   cursor: pointer;
+  box-shadow: #999 0px 1px 3px;
 }
 
 .browse-item-card:hover {
@@ -223,7 +225,7 @@
   padding: 3px 8px;
   border-radius: 20px;
   text-transform: uppercase;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .browse-item-type-badge.lost {
@@ -258,7 +260,7 @@
 .browse-item-date {
   font-size: 0.65rem;
   color: #9ca3af;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .browse-item-category {
@@ -267,7 +269,7 @@
   color: #6b7280;
   margin-bottom: 4px;
   letter-spacing: 0.3px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   text-align: left;
   display: flex;
   align-items: center;
@@ -289,7 +291,7 @@
   font-weight: 600;
   color: #111827;
   margin-bottom: 6px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   text-align: left;
 }
 
@@ -297,7 +299,7 @@
   font-size: 0.7rem;
   color: #6b7280;
   margin-bottom: 8px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   text-align: left;
   display: flex;
   align-items: center;
@@ -323,7 +325,7 @@
   color: #2b5797;
   cursor: pointer;
   transition: background 0.2s;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .browse-view-details-btn:hover {
@@ -335,20 +337,20 @@
   .browse-layout {
     flex-direction: column;
   }
-  
+
   .browse-sidebar {
     width: 100%;
     min-width: 100%;
   }
-  
+
   .browse-content-area {
     width: 100%;
   }
-  
+
   .browse-items-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .notification-dropdown {
     width: 300px;
     right: -50px;
@@ -392,7 +394,7 @@
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   font-size: 0.8rem;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   outline: none;
   transition: border-color 0.2s;
   background: #f8f9fa;
@@ -404,7 +406,7 @@
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   font-size: 0.8rem;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   background: #f8f9fa;
   outline: none;
   cursor: pointer;

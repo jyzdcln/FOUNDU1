@@ -1,18 +1,18 @@
-import { supabase } from './supabase';
+import { supabase } from "./supabase";
 
-export const saveReport = async (report, userRole = 'student') => {
+export const saveReport = async (report, userRole = "student") => {
   try {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+
     console.log("1. User object:", user);
-    
+
     if (!user.id) {
       alert("Please login first before reporting");
       return null;
     }
-    
-    const status = userRole === 'admin' ? 'verified' : 'pending';
-    
+
+    const status = userRole === "admin" ? "verified" : "pending";
+
     const reportData = {
       user_id: user.id,
       type: report.type,
@@ -23,29 +23,29 @@ export const saveReport = async (report, userRole = 'student') => {
       date: report.date,
       photo_url: report.photo || null,
       status: status,
-      created_at: new Date()
+      created_at: new Date(),
     };
-    
+
     console.log("2. Report data being sent:", reportData);
     console.log("3. User role:", userRole, "Status set to:", status);
-    
+
     const { data, error } = await supabase
-      .from('reports')
+      .from("reports")
       .insert([reportData])
       .select();
 
     console.log("4. Supabase response:", { data, error });
-    
+
     if (error) throw error;
-    
-    if (userRole === 'admin') {
+
+    if (userRole === "admin") {
       alert("Report submitted and automatically verified!");
     } else {
       alert("Report submitted! Waiting for admin verification.");
     }
     return data[0];
   } catch (error) {
-    console.error('Save error details:', error);
+    console.error("Save error details:", error);
     alert("Error: " + error.message);
     return null;
   }
@@ -54,15 +54,17 @@ export const saveReport = async (report, userRole = 'student') => {
 export const getReports = async () => {
   try {
     const { data, error } = await supabase
-      .from('reports')
-      .select('id, type, title, category, description, location, date, photo_url, status, created_at, users(name, email), admin_notes, rejection_reason, returned_to_user')
-      .order('created_at', { ascending: false })
+      .from("reports")
+      .select(
+        "id, type, title, category, description, location, date, photo_url, status, created_at, users(name, email), admin_notes, rejection_reason, returned_to_user",
+      )
+      .order("created_at", { ascending: false })
       .limit(50);
 
     if (error) throw error;
     return data || [];
   } catch (error) {
-    console.error('Get reports error:', error);
+    console.error("Get reports error:", error);
     return [];
   }
 };
@@ -74,24 +76,24 @@ export const updateReportStatus = async (id, newStatus, notes = null) => {
       updateData.admin_notes = notes;
       updateData.rejection_reason = notes;
     }
-    if (newStatus === 'received') {
+    if (newStatus === "received") {
       updateData.received_date = new Date();
     }
-    if (newStatus === 'returned') {
+    if (newStatus === "returned") {
       updateData.returned_to_user = true;
       updateData.returned_date = new Date();
     }
-    
+
     const { data, error } = await supabase
-      .from('reports')
+      .from("reports")
       .update(updateData)
-      .eq('id', id)
+      .eq("id", id)
       .select();
 
     if (error) throw error;
     return data[0];
   } catch (error) {
-    console.error('Update error:', error);
+    console.error("Update error:", error);
     return null;
   }
 };
@@ -99,20 +101,20 @@ export const updateReportStatus = async (id, newStatus, notes = null) => {
 export const updateReportWithEdit = async (id, updatedData) => {
   try {
     const { data, error } = await supabase
-      .from('reports')
+      .from("reports")
       .update({
         ...updatedData,
-        status: 'pending',
+        status: "pending",
         edited_by_student: true,
-        returned_to_user: false
+        returned_to_user: false,
       })
-      .eq('id', id)
+      .eq("id", id)
       .select();
 
     if (error) throw error;
     return data[0];
   } catch (error) {
-    console.error('Update error:', error);
+    console.error("Update error:", error);
     return null;
   }
 };
@@ -120,15 +122,15 @@ export const updateReportWithEdit = async (id, updatedData) => {
 export const getReportsByUser = async (userId) => {
   try {
     const { data, error } = await supabase
-      .from('reports')
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
+      .from("reports")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
 
     if (error) throw error;
     return data || [];
   } catch (error) {
-    console.error('Get user reports error:', error);
+    console.error("Get user reports error:", error);
     return [];
   }
 };
@@ -136,16 +138,18 @@ export const getReportsByUser = async (userId) => {
 export const getPendingReports = async () => {
   try {
     const { data, error } = await supabase
-      .from('reports')
-      .select('id, type, title, category, description, location, date, photo_url, status, created_at, users(name, email), admin_notes')
-      .eq('status', 'pending')
-      .order('created_at', { ascending: false })
+      .from("reports")
+      .select(
+        "id, type, title, category, description, location, date, photo_url, status, created_at, users(name, email), admin_notes",
+      )
+      .eq("status", "pending")
+      .order("created_at", { ascending: false })
       .limit(50);
 
     if (error) throw error;
     return data || [];
   } catch (error) {
-    console.error('Get pending reports error:', error);
+    console.error("Get pending reports error:", error);
     return [];
   }
 };
@@ -153,130 +157,139 @@ export const getPendingReports = async () => {
 export const getVerifiedReports = async () => {
   try {
     const { data, error } = await supabase
-      .from('reports')
-      .select('id, type, title, category, description, location, date, photo_url, status, created_at, users(name, email)')
-      .eq('status', 'verified')
-      .order('created_at', { ascending: false })
+      .from("reports")
+      .select(
+        "id, type, title, category, description, location, date, photo_url, status, created_at, users(name, email)",
+      )
+      .eq("status", "verified")
+      .order("created_at", { ascending: false })
       .limit(50);
 
     if (error) throw error;
     return data || [];
   } catch (error) {
-    console.error('Get verified reports error:', error);
+    console.error("Get verified reports error:", error);
     return [];
   }
 };
 
 export const deleteReport = async (id) => {
   try {
-    const { error } = await supabase
-      .from('reports')
-      .delete()
-      .eq('id', id);
+    const { error } = await supabase.from("reports").delete().eq("id", id);
 
     if (error) throw error;
     return true;
   } catch (error) {
-    console.error('Delete error:', error);
-    return false; 
+    console.error("Delete error:", error);
+    return false;
   }
 };
 
 export const createClaim = async (claimData) => {
   try {
     const { data, error } = await supabase
-      .from('claims')
+      .from("claims")
       .insert([claimData])
       .select();
-    
+
     if (error) throw error;
-    
+
     if (data && data[0]) {
       const { error: updateError } = await supabase
-        .from('reports')
-        .update({ status: 'pending_claim' })
-        .eq('id', claimData.report_id);
-      
+        .from("reports")
+        .update({ status: "pending_claim" })
+        .eq("id", claimData.report_id);
+
       if (updateError) {
         console.error("Error updating report status:", updateError);
       }
     }
-    
+
     return data[0];
   } catch (error) {
-    console.error('Create claim error:', error);
+    console.error("Create claim error:", error);
     return null;
+  }
+};
+
+export const addNotification = async (
+  userId,
+  message,
+  type,
+  relatedId = null,
+) => {
+  try {
+    const { error } = await supabase.from("notifications").insert({
+      user_id: userId,
+      message: message,
+      type: type,
+      related_id: relatedId,
+      is_read: false,
+      created_at: new Date(),
+    });
+
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error("Add notification error:", error);
+    return false;
   }
 };
 
 export const getStudentNotifications = async (userId) => {
   try {
-    const { data: reports } = await supabase
-      .from('reports')
-      .select('id, title, status, created_at, admin_notes')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false })
+    const { data, error } = await supabase
+      .from("notifications")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false })
       .limit(20);
-    
-    const notifications = [];
-    
-    for (const report of reports) {
-      if (report.status === 'returned' && report.admin_notes) {
-        notifications.push({
-          id: `${report.id}_returned`,
-          message: `Report "${report.title}" needs your attention: ${report.admin_notes}`,
-          time: formatTimeAgo(report.created_at),
-          read: false,
-          type: 'returned'
-        });
-      } else if (report.status === 'verified') {
-        notifications.push({
-          id: `${report.id}_verified`,
-          message: `Your report "${report.title}" has been verified and is now visible!`,
-          time: formatTimeAgo(report.created_at),
-          read: false,
-          type: 'verified'
-        });
-      }
-    }
-    
-    const { data: claims } = await supabase
-      .from('claims')
-      .select('*, reports(title)')
-      .eq('student_id', userId)
-      .order('claim_date', { ascending: false })
-      .limit(20);
-    
-    for (const claim of claims) {
-      if (claim.status === 'approved') {
-        notifications.push({
-          id: `${claim.id}_approved`,
-          message: `Your claim for "${claim.reports?.title}" has been approved! You can now pick up your item.`,
-          time: formatTimeAgo(claim.claim_date),
-          read: false,
-          type: 'approved'
-        });
-      } else if (claim.status === 'rejected') {
-        notifications.push({
-          id: `${claim.id}_rejected`,
-          message: `Your claim for "${claim.reports?.title}" was rejected. Please contact admin for more info.`,
-          time: formatTimeAgo(claim.claim_date),
-          read: false,
-          type: 'rejected'
-        });
-      }
-    }
-    
-    notifications.sort((a, b) => {
-      if (a.time.includes('seconds') && !b.time.includes('seconds')) return -1;
-      if (!a.time.includes('seconds') && b.time.includes('seconds')) return 1;
-      return 0;
-    });
-    
-    return notifications.slice(0, 10);
+
+    if (error) throw error;
+
+    const notifications = (data || []).map((notif) => ({
+      id: notif.id,
+      message: notif.message,
+      time: formatTimeAgo(notif.created_at),
+      read: notif.is_read,
+      type: notif.type,
+    }));
+
+    return notifications;
   } catch (error) {
-    console.error('Get notifications error:', error);
+    console.error("Get notifications error:", error);
     return [];
+  }
+};
+
+export const markNotificationAsRead = async (notificationId) => {
+  try {
+    const { error } = await supabase
+      .from("notifications")
+      .update({ is_read: true })
+      .eq("id", notificationId);
+
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error("Mark notification as read error:", error);
+    return false;
+  }
+};
+
+export const markAllNotificationsAsRead = async (userId) => {
+  try {
+    const { error } = await supabase
+      .from("notifications")
+      .update({ is_read: true })
+      .eq("user_id", userId)
+      .eq("is_read", false);
+
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error("Mark all notifications as read error:", error);
+    return false;
   }
 };
 
@@ -284,7 +297,7 @@ const formatTimeAgo = (dateString) => {
   const date = new Date(dateString);
   const now = new Date();
   const seconds = Math.floor((now - date) / 1000);
-  
+
   if (seconds < 60) return `${seconds} seconds ago`;
   const minutes = Math.floor(seconds / 60);
   if (minutes < 60) return `${minutes} minutes ago`;
@@ -297,30 +310,32 @@ const formatTimeAgo = (dateString) => {
 
 export const subscribeToNewReports = (callback) => {
   const subscription = supabase
-    .channel('reports-channel')
-    .on('postgres_changes', 
-      { event: 'INSERT', schema: 'public', table: 'reports' },
+    .channel("reports-channel")
+    .on(
+      "postgres_changes",
+      { event: "INSERT", schema: "public", table: "reports" },
       (payload) => {
-        console.log('New report received in real-time!', payload);
+        console.log("New report received in real-time!", payload);
         callback(payload.new);
-      }
+      },
     )
     .subscribe();
-  
+
   return subscription;
 };
 
 export const subscribeToStatusChanges = (callback) => {
   const subscription = supabase
-    .channel('reports-status-channel')
-    .on('postgres_changes', 
-      { event: 'UPDATE', schema: 'public', table: 'reports' },
+    .channel("reports-status-channel")
+    .on(
+      "postgres_changes",
+      { event: "UPDATE", schema: "public", table: "reports" },
       (payload) => {
-        console.log('Report status changed!', payload);
+        console.log("Report status changed!", payload);
         callback(payload.new);
-      }
+      },
     )
     .subscribe();
-  
+
   return subscription;
 };

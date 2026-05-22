@@ -2,25 +2,19 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./StudentDashboard.css";
 import "./StudentDashboardBrowse.css";
-import MyClaims from "./MyClaims";
+import founduLogo from "../assets/icons/foundulogo-icon.png";
+import studentUserIcon from "../assets/icons/admin-user-icon.png";
+import studentDropdownIcon from "../assets/icons/admin-dropdown-icon.png";
+import StudentDashboardLayout from "./StudentDashboardLayout";
 
 import {
   getReports,
   getReportsByUser,
   getStudentNotifications,
   subscribeToStatusChanges,
+  markNotificationAsRead,
+  markAllNotificationsAsRead,
 } from "../services/reportService";
-import founduLogo from "../assets/icons/foundulogo-icon.png";
-import studentUserIcon from "../assets/icons/admin-user-icon.png";
-import studentDropdownIcon from "../assets/icons/admin-dropdown-icon.png";
-import notificationIcon from "../assets/icons/notification-icon.png";
-import ReportLostItemModal from "../components/student/ReportLostItemModal";
-import ReportFoundItemModal from "../components/student/ReportFoundItemModal";
-import StudentEditReportModal from "../components/student/StudentEditReportModal";
-import locationIcon from "../assets/icons/location-icons.png";
-import tagIcon from "../assets/icons/tag-icons.png";
-import searchIcon from "../assets/icons/Viewreport-icons.png";
-import downArrowIcon from "../assets/icons/down-arrow-icon.png";
 import { supabase } from "../services/supabase";
 
 const StudentDashboard = () => {
@@ -40,6 +34,7 @@ const StudentDashboard = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedReportForEdit, setSelectedReportForEdit] = useState(null);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [isContentLoading, setIsContentLoading] = useState(false);
   const userDropdownRef = useRef(null);
   const reportDropdownRef = useRef(null);
   const notificationRef = useRef(null);
@@ -60,9 +55,11 @@ const StudentDashboard = () => {
     if (location.state?.showBrowse !== undefined) {
       setShowBrowse(location.state.showBrowse);
       setShowMyClaims(false);
+      setIsContentLoading(false);
     } else if (location.state?.showMyClaims !== undefined) {
       setShowMyClaims(location.state.showMyClaims);
       setShowBrowse(false);
+      setIsContentLoading(false);
     } else if (!location.state) {
       setShowBrowse(true);
       setShowMyClaims(false);
@@ -204,21 +201,33 @@ const StudentDashboard = () => {
   };
 
   const handleBrowse = () => {
+    setIsContentLoading(true);
     setShowBrowse(true);
     setShowMyClaims(false);
     setIsNotificationOpen(false);
+    setTimeout(() => {
+      setIsContentLoading(false);
+    }, 300);
   };
 
   const handleDashboard = () => {
+    setIsContentLoading(true);
     setShowBrowse(false);
     setShowMyClaims(false);
     setIsNotificationOpen(false);
+    setTimeout(() => {
+      setIsContentLoading(false);
+    }, 300);
   };
 
   const handleMyClaims = () => {
+    setIsContentLoading(true);
     setShowBrowse(false);
     setShowMyClaims(true);
     setIsNotificationOpen(false);
+    setTimeout(() => {
+      setIsContentLoading(false);
+    }, 300);
   };
 
   const handleViewDetails = (reportId) => {
@@ -239,12 +248,23 @@ const StudentDashboard = () => {
     setIsNotificationOpen(!isNotificationOpen);
   };
 
-  const markNotificationAsRead = async (id) => {
+  const handleMarkNotificationAsRead = async (id) => {
+    await markNotificationAsRead(id);
     setNotifications(
       notifications.map((notif) =>
         notif.id === id ? { ...notif, read: true } : notif,
       ),
     );
+  };
+
+  const handleMarkAllAsRead = async () => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    if (user.id) {
+      await markAllNotificationsAsRead(user.id);
+      setNotifications(
+        notifications.map((notif) => ({ ...notif, read: true })),
+      );
+    }
   };
 
   const formatDate = (dateString) => {
@@ -294,6 +314,11 @@ const StudentDashboard = () => {
   );
   const unreadCount = notifications.filter((n) => !n.read).length;
 
+  const handleEditReport = (report) => {
+    setSelectedReportForEdit(report);
+    setShowEditModal(true);
+  };
+
   if (initialLoading && reports.length === 0) {
     return (
       <div className="student-dashboard-container">
@@ -336,424 +361,53 @@ const StudentDashboard = () => {
   }
 
   return (
-    <div className="student-dashboard-container">
-      <header className="student-full-header">
-        <div className="student-header-content">
-          <div className="student-logo">
-            <img src={founduLogo} alt="FoundU" className="student-logo-img" />
-          </div>
-          <div className="student-header-actions">
-            <span className="student-lang" onClick={handleBrowse}>
-              Browse
-            </span>
-            <span className="student-lang" onClick={handleMyClaims}>
-              My Claims
-            </span>
-            <span className="student-lang" onClick={handleDashboard}>
-              Dashboard
-            </span>
-
-            <div className="notification-bell" ref={notificationRef}>
-              <div className="notification-icon" onClick={toggleNotification}>
-                <img
-                  src={notificationIcon}
-                  alt="notifications"
-                  className="notification-icon-img"
-                />
-                {unreadCount > 0 && (
-                  <span className="notification-badge">{unreadCount}</span>
-                )}
-              </div>
-              {isNotificationOpen && (
-                <div className="notification-dropdown">
-                  <div className="notification-header">
-                    <h4>Notifications</h4>
-                  </div>
-                  <div className="notification-list">
-                    {notifications.length === 0 ? (
-                      <div className="notification-item">
-                        <div className="notification-content">
-                          <p className="notification-message">
-                            No notifications
-                          </p>
-                          <span className="notification-time">---</span>
-                        </div>
-                      </div>
-                    ) : (
-                      notifications.map((notif, index) => (
-                        <div
-                          key={index}
-                          className={`notification-item ${!notif.read ? "unread" : ""}`}
-                          onClick={() => markNotificationAsRead(notif.id)}
-                        >
-                          <div className="notification-content">
-                            <p className="notification-message">
-                              {notif.message}
-                            </p>
-                            <span className="notification-time">
-                              {notif.time}
-                            </span>
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="user-dropdown" ref={userDropdownRef}>
-              <div
-                className="user-dropdown-trigger"
-                onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
-              >
-                <div className="user-icon">
-                  <img
-                    src={studentUserIcon}
-                    alt="user"
-                    className="user-icon-img"
-                  />
-                </div>
-                <div className="dropdown-icon">
-                  <img
-                    src={studentDropdownIcon}
-                    alt="dropdown"
-                    className="dropdown-icon-img"
-                  />
-                </div>
-              </div>
-              {isUserDropdownOpen && (
-                <div className="dropdown-menu">
-                  <button className="dropdown-item" onClick={handleLogout}>
-                    Logout
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <div className="student-main-content">
-        {showMyClaims ? (
-          <MyClaims />
-        ) : !showBrowse ? (
-          <>
-            <div className="report-new-item-section">
-              <div className="my-dashboard-title">
-                <h2>My Dashboard</h2>
-              </div>
-              <div className="report-dropdown" ref={reportDropdownRef}>
-                <button
-                  className="report-dropdown-btn"
-                  onClick={() => setIsReportDropdownOpen(!isReportDropdownOpen)}
-                >
-                  Report New Item
-                  <img
-                    src={studentDropdownIcon}
-                    alt="dropdown"
-                    className="report-dropdown-arrow"
-                  />
-                </button>
-                {isReportDropdownOpen && (
-                  <div className="report-dropdown-menu">
-                    <button
-                      className="report-dropdown-item"
-                      onClick={handleReportLost}
-                    >
-                      Report Lost Item
-                    </button>
-                    <button
-                      className="report-dropdown-item"
-                      onClick={handleReportFound}
-                    >
-                      Report Found Item
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="student-stats-cards">
-              <div className="student-stat-card">
-                <div className="student-stat-value">
-                  {userReports.filter((r) => r.type === "lost").length}
-                </div>
-                <div className="student-stat-label">ITEM YOU LOST</div>
-              </div>
-              <div className="student-stat-card">
-                <div className="student-stat-value">
-                  {userReports.filter((r) => r.type === "found").length}
-                </div>
-                <div className="student-stat-label">ITEM YOU FOUND</div>
-              </div>
-              <div className="student-stat-card">
-                <div className="student-stat-value">{userReports.length}</div>
-                <div className="student-stat-label">TOTAL REPORTS</div>
-              </div>
-            </div>
-
-            {reportsNeedingAttention.length > 0 && (
-              <div className="my-reports-section">
-                <h3>My Reports Needing Attention</h3>
-                <div className="my-reports-list">
-                  {reportsNeedingAttention.map((report) => (
-                    <div key={report.id} className="my-report-card">
-                      <div className="my-report-info">
-                        <h4>{report.title}</h4>
-                        <p className="my-report-reported">
-                          Reported: {formatDate(report.created_at)}
-                        </p>
-                        <div className="my-report-meta">
-                          <span className="my-report-category">
-                            {report.category || "Uncategorized"}
-                          </span>
-                          <span className={`my-report-status ${report.status}`}>
-                            {report.status === "returned"
-                              ? "RETURNED"
-                              : "PENDING"}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="my-report-action">
-                        {report.status === "returned" && (
-                          <button
-                            className="edit-report-btn"
-                            onClick={() => {
-                              setSelectedReportForEdit(report);
-                              setShowEditModal(true);
-                            }}
-                          >
-                            Edit & Resubmit
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </>
-        ) : (
-          <div className="browse-layout">
-            <div className="browse-sidebar">
-              <div className="browse-sidebar-section">
-                <h3>Search Item</h3>
-              </div>
-
-              <div className="browse-sidebar-section">
-                <h3>KEYWORDS</h3>
-                <div className="browse-keyword-wrapper">
-                  <input
-                    type="text"
-                    className="browse-keyword-input"
-                    placeholder="Search..."
-                    value={filters.keyword}
-                    onChange={(e) =>
-                      handleFilterChange("keyword", e.target.value)
-                    }
-                  />
-                  <img
-                    src={searchIcon}
-                    alt="search"
-                    className="browse-search-icon"
-                  />
-                </div>
-              </div>
-
-              <div className="browse-sidebar-section">
-                <h3>CATEGORY</h3>
-                <div className="browse-category-wrapper">
-                  <select
-                    className="browse-category-select"
-                    value={filters.category}
-                    onChange={(e) =>
-                      handleFilterChange("category", e.target.value)
-                    }
-                  >
-                    {uniqueCategories.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {cat}
-                      </option>
-                    ))}
-                  </select>
-                  <img
-                    src={downArrowIcon}
-                    alt="dropdown"
-                    className="browse-category-icon"
-                  />
-                </div>
-              </div>
-
-              <div className="browse-sidebar-section">
-                <h3>TYPE</h3>
-                <div className="browse-type-options">
-                  <label className="browse-type-option">
-                    <input
-                      type="radio"
-                      name="type"
-                      value="All"
-                      checked={filters.type === "All"}
-                      onChange={(e) =>
-                        handleFilterChange("type", e.target.value)
-                      }
-                    />
-                    All
-                  </label>
-                  <label className="browse-type-option">
-                    <input
-                      type="radio"
-                      name="type"
-                      value="lost"
-                      checked={filters.type === "lost"}
-                      onChange={(e) =>
-                        handleFilterChange("type", e.target.value)
-                      }
-                    />
-                    Lost
-                  </label>
-                  <label className="browse-type-option">
-                    <input
-                      type="radio"
-                      name="type"
-                      value="found"
-                      checked={filters.type === "found"}
-                      onChange={(e) =>
-                        handleFilterChange("type", e.target.value)
-                      }
-                    />
-                    Found
-                  </label>
-                </div>
-              </div>
-
-              <div className="browse-sidebar-section">
-                <button
-                  className="browse-apply-filters-btn"
-                  onClick={applyFilters}
-                >
-                  APPLY FILTERS
-                </button>
-                <button className="browse-reset-btn" onClick={resetFilters}>
-                  Reset
-                </button>
-              </div>
-            </div>
-
-            <div className="browse-content-area">
-              <div className="browse-results-header">
-                <div className="browse-breadcrumb">
-                  <span className="browse-home-link" onClick={handleDashboard}>
-                    Home
-                  </span>{" "}
-                  / Browse Items
-                </div>
-                <div className="browse-results-count">
-                  <strong>{filteredReports.length}</strong> items found
-                </div>
-              </div>
-
-              <div className="browse-items-grid">
-                {filteredReports.length === 0 ? (
-                  <div className="empty-state">
-                    <p>No reports found</p>
-                  </div>
-                ) : (
-                  filteredReports.map((report) => (
-                    <div key={report.id} className="browse-item-card">
-                      <div className="browse-item-card-image">
-                        {report.photo_url ? (
-                          <img src={report.photo_url} alt={report.title} />
-                        ) : (
-                          <span>No image</span>
-                        )}
-                      </div>
-                      <div className="browse-item-card-content">
-                        <div className="browse-item-card-header">
-                          <div className="browse-item-type-wrapper">
-                            <div
-                              className={`browse-item-type-badge ${report.type}`}
-                            >
-                              {report.type === "lost" ? "LOST" : "FOUND"}
-                            </div>
-                            <div className={`status-badge ${report.status}`}>
-                              {report.status === "verified"
-                                ? "Verified"
-                                : "Pending"}
-                            </div>
-                          </div>
-                          <div className="browse-item-date">
-                            {formatDate(report.created_at)}
-                          </div>
-                        </div>
-                        <div className="browse-item-category">
-                          <img
-                            src={tagIcon}
-                            alt="category"
-                            className="browse-category-icon-img"
-                          />
-                          {report.category || "Item"}
-                        </div>
-                        <div className="browse-item-title">{report.title}</div>
-                        <div className="browse-item-location">
-                          <img
-                            src={locationIcon}
-                            alt="location"
-                            className="browse-location-icon-img"
-                          />
-                          {report.location}
-                        </div>
-                      </div>
-                      <button
-                        className="browse-view-details-btn"
-                        onClick={() => handleViewDetails(report.id)}
-                      >
-                        VIEW DETAILS
-                      </button>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {showReportLostModal && (
-        <ReportLostItemModal
-          onClose={() => setShowReportLostModal(false)}
-          onSuccess={() => {
-            loadReports();
-            loadUserReports();
-            loadNotifications();
-          }}
-        />
-      )}
-      {showReportFoundModal && (
-        <ReportFoundItemModal
-          onClose={() => setShowReportFoundModal(false)}
-          onSuccess={() => {
-            loadReports();
-            loadUserReports();
-            loadNotifications();
-          }}
-        />
-      )}
-      {showEditModal && selectedReportForEdit && (
-        <StudentEditReportModal
-          report={selectedReportForEdit}
-          onClose={() => {
-            setShowEditModal(false);
-            setSelectedReportForEdit(null);
-          }}
-          onSuccess={() => {
-            loadReports();
-            loadUserReports();
-            loadNotifications();
-          }}
-        />
-      )}
-    </div>
+    <StudentDashboardLayout
+      showMyClaims={showMyClaims}
+      showBrowse={showBrowse}
+      handleBrowse={handleBrowse}
+      handleMyClaims={handleMyClaims}
+      handleDashboard={handleDashboard}
+      userReports={userReports}
+      formatDate={formatDate}
+      reportsNeedingAttention={reportsNeedingAttention}
+      handleEditReport={handleEditReport}
+      showEditModal={showEditModal}
+      selectedReportForEdit={selectedReportForEdit}
+      setShowEditModal={setShowEditModal}
+      setSelectedReportForEdit={setSelectedReportForEdit}
+      loadReports={loadReports}
+      loadUserReports={loadUserReports}
+      loadNotifications={loadNotifications}
+      showReportLostModal={showReportLostModal}
+      setShowReportLostModal={setShowReportLostModal}
+      showReportFoundModal={showReportFoundModal}
+      setShowReportFoundModal={setShowReportFoundModal}
+      isReportDropdownOpen={isReportDropdownOpen}
+      setIsReportDropdownOpen={setIsReportDropdownOpen}
+      handleReportLost={handleReportLost}
+      handleReportFound={handleReportFound}
+      filters={filters}
+      handleFilterChange={handleFilterChange}
+      resetFilters={resetFilters}
+      applyFilters={applyFilters}
+      uniqueCategories={uniqueCategories}
+      filteredReports={filteredReports}
+      handleViewDetails={handleViewDetails}
+      reports={reports}
+      isNotificationOpen={isNotificationOpen}
+      toggleNotification={toggleNotification}
+      notifications={notifications}
+      markNotificationAsRead={handleMarkNotificationAsRead}
+      markAllAsRead={handleMarkAllAsRead}
+      unreadCount={unreadCount}
+      isUserDropdownOpen={isUserDropdownOpen}
+      setIsUserDropdownOpen={setIsUserDropdownOpen}
+      handleLogout={handleLogout}
+      notificationRef={notificationRef}
+      userDropdownRef={userDropdownRef}
+      reportDropdownRef={reportDropdownRef}
+      isContentLoading={isContentLoading}
+    />
   );
 };
 

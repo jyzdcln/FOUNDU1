@@ -1,7 +1,7 @@
 .student-notifications-page {
   min-height: 100vh;
   background: #f5f7fa;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .student-full-header {
@@ -372,22 +372,22 @@
   .student-notification-card-content {
     flex-direction: column;
   }
-  
+
   .student-notification-icon {
     text-align: left;
   }
-  
+
   .student-notification-actions {
     flex-wrap: wrap;
   }
-  
+
   .mark-read-btn,
   .view-details-btn,
   .delete-notif-btn {
     flex: 1;
     text-align: center;
   }
-  
+
   .notification-dropdown {
     width: 300px;
     right: -50px;

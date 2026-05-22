@@ -7,7 +7,6 @@ import downArrowIcon from "../assets/icons/down-arrow-icon.png";
 const MyClaims = () => {
   const [claims, setClaims] = useState([]);
   const [filteredClaims, setFilteredClaims] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [selectedClaim, setSelectedClaim] = useState(null);
@@ -70,7 +69,6 @@ const MyClaims = () => {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
 
     if (!user.id) {
-      setLoading(false);
       return;
     }
 
@@ -96,13 +94,11 @@ const MyClaims = () => {
 
     if (error) {
       console.error("Error loading claims:", error);
-      setLoading(false);
       return;
     }
 
     setClaims(data || []);
     setFilteredClaims(data || []);
-    setLoading(false);
   };
 
   const getStatusBadge = (status) => {
@@ -181,15 +177,6 @@ const MyClaims = () => {
     };
   }, []);
 
-  if (loading) {
-    return (
-      <div className="myclaims-loading">
-        <div className="myclaims-spinner"></div>
-        <p>Loading your claims...</p>
-      </div>
-    );
-  }
-
   return (
     <div className="myclaims-container">
       <div className="myclaims-header">
@@ -266,14 +253,6 @@ const MyClaims = () => {
                   ? "You haven't submitted any claims yet."
                   : "No claims match your search criteria."}
               </p>
-              {claims.length === 0 && (
-                <button
-                  className="myclaims-browse-btn"
-                  onClick={() => (window.location.href = "/student-dashboard")}
-                >
-                  Browse Items to Claim
-                </button>
-              )}
             </div>
           ) : (
             filteredClaims.map((claim) => (

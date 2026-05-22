@@ -73,12 +73,14 @@ body {
   padding: clamp(0.1rem, 0.2vh, 0.5rem) clamp(1rem, 1vw, 0.5rem);
   border-radius: 6px;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .student-lang:hover {
   border-radius: 30px;
   background: rgb(230, 230, 230);
   color: #000000;
+  transform: translateY(-2px);
 }
 
 .student-main-content {
@@ -90,13 +92,38 @@ body {
   padding-top: 30px;
 }
 
-.report-new-item-section {
+.dashboard-header-wrapper {
+  margin-bottom: 24px;
+}
+
+.dashboard-title-section {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
+  align-items: flex-start;
   flex-wrap: wrap;
   gap: 15px;
+}
+
+.my-dashboard-title {
+  margin: 0;
+  padding: 0;
+}
+
+.my-dashboard-title h2 {
+  font-size: 1.5rem;
+  color: #2b5797;
+  margin: 0;
+  padding: 0;
+  font-weight: 700;
+  text-align: left;
+}
+
+.dashboard-subtitle {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 5px 0 0 0;
+  padding: 0;
+  text-align: left;
 }
 
 .report-dropdown {
@@ -112,23 +139,58 @@ body {
   background: #2b5797;
   color: white;
   border: none;
-  padding: 8px 16px;
+  padding: 8px 20px;
   border-radius: 30px;
   cursor: pointer;
   font-size: 0.8rem;
   font-weight: 600;
-  transition: background 0.2s;
+  transition: all 0.3s ease;
   line-height: 1;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.report-dropdown-btn:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.report-dropdown-btn:hover:before {
+  left: 100%;
 }
 
 .report-dropdown-btn:hover {
   background: #1e3f6e;
+  transform: scale(1.02);
+  box-shadow: 0 5px 15px rgba(43, 87, 151, 0.4);
+}
+
+.report-dropdown-btn:active {
+  transform: scale(0.98);
+  transition: transform 0.05s;
 }
 
 .report-dropdown-arrow {
   width: 12px;
   height: 12px;
   object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.report-dropdown-btn:hover .report-dropdown-arrow {
+  transform: translateX(4px);
 }
 
 .report-dropdown-menu {
@@ -142,6 +204,18 @@ body {
   min-width: 170px;
   z-index: 1000;
   overflow: hidden;
+  animation: dropdownFadeIn 0.3s ease;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .report-dropdown-item {
@@ -153,30 +227,15 @@ body {
   text-align: left;
   font-size: 0.85rem;
   color: #333;
-  transition: background 0.2s;
+  transition: all 0.3s ease;
 }
 
 .report-dropdown-item:hover {
   background: #2b5797;
   color: white;
+  padding-left: 24px;
 }
 
-.my-dashboard-title {
-  margin: 0;
-  padding: 0;
-  display: flex;
-  align-items: center;
-}
-
-.my-dashboard-title h2 {
-  font-size: 1.5rem;
-  color: #2c3e50;
-  margin: 0;
-  padding: 0;
-  font-weight: 700;
-  text-align: left;
-  line-height: 38px;
-}
 .student-stats-cards {
   display: flex;
   gap: 20px;
@@ -192,6 +251,13 @@ body {
   text-align: center;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   min-width: 120px;
+  box-shadow: #999 0px 1px 3px;
+  transition: all 0.3s ease;
+}
+
+.student-stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 }
 
 .student-stat-value {
@@ -212,19 +278,40 @@ body {
   background: white;
   border-radius: 12px;
   padding: 20px;
+  box-shadow: #999 0px 1px 3px;
+  border: 1px solid #e0e0e0;
+  overflow: hidden;
+  text-align: left;
 }
 
 .my-reports-section h3 {
   font-size: 1.1rem;
-  margin-bottom: 16px;
-  color: #666;
+  margin-bottom: 20px;
+  color: #2c3e50;
   text-align: left;
+  font-weight: 600;
+  position: relative;
+  padding-bottom: 12px;
+  display: block;
+  width: 100%;
+}
+
+.my-reports-section h3:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: none;
+  height: 3px;
+  background: #2b5797;
+  border-radius: 2px;
 }
 
 .my-reports-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  margin-top: 10px;
 }
 
 .my-report-card {
@@ -236,6 +323,13 @@ body {
   border-radius: 12px;
   border: 1px solid #e0e0e0;
   gap: 20px;
+  transition: all 0.3s ease;
+}
+
+.my-report-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-color: #2b5797;
+  transform: translateX(5px);
 }
 
 .my-report-info {
@@ -300,6 +394,28 @@ body {
   min-width: 140px;
 }
 
+.my-reports-empty {
+  text-align: center;
+  padding: 50px 20px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #f1f5f9 100%);
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  margin-top: 10px;
+}
+
+.my-reports-empty p {
+  color: #2c3e50;
+  font-size: 1.25rem;
+  margin-bottom: 8px;
+  font-family: "Inter", sans-serif;
+}
+
+.my-reports-empty-sub {
+  font-size: 0.85rem !important;
+  color: #64748b !important;
+  margin-top: 8px !important;
+}
+
 .admin-note {
   color: #dc3545;
   font-style: italic;
@@ -329,13 +445,14 @@ body {
   cursor: pointer;
   font-size: 0.75rem;
   font-weight: 600;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
   white-space: nowrap;
 }
 
 .edit-report-btn:hover {
   background: #2b5797;
   color: white;
+  transform: scale(1.05);
 }
 
 .empty-state {
@@ -359,11 +476,12 @@ body {
   border-radius: 30px;
   background: #2b5797;
   color: white;
-  transition: background 0.2s;
+  transition: all 0.3s ease;
 }
 
 .user-dropdown-trigger:hover {
   background: #1e3f6e;
+  transform: translateY(-2px);
 }
 
 .user-icon {
@@ -388,7 +506,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s;
+  transition: transform 0.3s ease;
 }
 
 .user-dropdown.open .dropdown-icon {
@@ -406,17 +524,6 @@ body {
   z-index: 1000;
   overflow: hidden;
   animation: dropdownFadeIn 0.2s ease;
-}
-
-@keyframes dropdownFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .dropdown-item {
@@ -456,6 +563,28 @@ body {
   margin-bottom: 16px;
 }
 
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.loading-spinner-small {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e0e0e0;
+  border-top: 3px solid #2b5797;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);
@@ -470,8 +599,9 @@ body {
     flex-direction: column;
   }
 
-  .report-new-item-section {
-    justify-content: center;
+  .dashboard-title-section {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .report-dropdown-menu {
@@ -499,4 +629,22 @@ body {
   .edit-report-btn {
     width: 100%;
   }
+}
+.content-loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  background: transparent;
+}
+
+.content-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e0e0e0;
+  border-top: 3px solid #2b5797;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 12px;
 }
