@@ -143,6 +143,32 @@ const StudentDashboard = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    if (!user.id) return;
+
+    const notificationSubscription = supabase
+      .channel("notifications-channel")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "notifications",
+          filter: `user_id=eq.${user.id}`,
+        },
+        async (payload) => {
+          console.log("New notification received!", payload);
+          await loadNotifications();
+        },
+      )
+      .subscribe();
+
+    return () => {
+      notificationSubscription.unsubscribe();
+    };
+  }, []);
+
   const loadReports = async () => {
     setInitialLoading(true);
     const allReports = await getReports();

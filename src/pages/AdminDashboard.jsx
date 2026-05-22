@@ -7,7 +7,7 @@ import ReportFoundItem from "../components/admin/ReportFoundItem";
 import ViewReports from "./ViewReports";
 import ClaimedItems from "./ClaimedItems";
 import UnclaimedItems from "./UnclaimedItems";
-import Notifications from "./Notifications";
+import Notifications from "./AdminNotifications";
 import {
   getReports,
   subscribeToNewReports,

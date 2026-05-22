@@ -91,6 +91,48 @@ export const updateReportStatus = async (id, newStatus, notes = null) => {
       .select();
 
     if (error) throw error;
+
+    if (data && data[0]) {
+      const report = data[0];
+      const userId = report.user_id;
+      let message = "";
+      let type = "";
+
+      if (newStatus === "verified") {
+        message = `Your report "${report.title}" has been verified and is now visible!`;
+        type = "report_verified";
+      } else if (newStatus === "rejected") {
+        message = `Your report "${report.title}" was rejected. Reason: ${notes || "Please contact admin"}`;
+        type = "report_rejected";
+      } else if (newStatus === "returned") {
+        message = `Your report "${report.title}" was returned. Please edit and resubmit. Reason: ${notes || "Please update your report"}`;
+        type = "report_returned";
+      }
+
+      if (message && userId) {
+        console.log(
+          `Attempting to insert notification: ${type} for user ${userId}`,
+        );
+        const { error: notifError, data: notifData } = await supabase
+          .from("notifications")
+          .insert({
+            user_id: userId,
+            message: message,
+            type: type,
+            related_id: id,
+            is_read: false,
+            created_at: new Date(),
+          })
+          .select();
+
+        if (notifError) {
+          console.error("Error inserting notification:", notifError);
+        } else {
+          console.log("Notification inserted successfully:", notifData);
+        }
+      }
+    }
+
     return data[0];
   } catch (error) {
     console.error("Update error:", error);
