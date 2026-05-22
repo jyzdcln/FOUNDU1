@@ -9,6 +9,8 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const hasOpenedPopup = useRef(false);
+  const aboutSectionRef = useRef(null);
+  const homeSectionRef = useRef(null);
 
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [showAdminForm, setShowAdminForm] = useState(false);
@@ -20,6 +22,7 @@ const LandingPage = () => {
   const [office365Password, setOffice365Password] = useState("");
   const [error, setError] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
 
   useEffect(() => {
     if (location.state?.openLogin && !hasOpenedPopup.current) {
@@ -40,6 +43,73 @@ const LandingPage = () => {
       document.body.style.overflow = "";
     };
   }, [showLoginPopup]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            setActiveSection("about");
+          }
+        });
+      },
+      { threshold: 0.3 },
+    );
+
+    if (aboutSectionRef.current) {
+      observer.observe(aboutSectionRef.current);
+    }
+
+    const handleScroll = () => {
+      if (window.scrollY < 100) {
+        setActiveSection("home");
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      if (aboutSectionRef.current) {
+        observer.unobserve(aboutSectionRef.current);
+      }
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const scrollToSection = (section) => {
+    setActiveSection(section);
+
+    if (section === "home") {
+      const heroElement = document.querySelector(".hero-section");
+      if (heroElement) {
+        heroElement.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      } else {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      }
+    } else if (section === "about") {
+      const aboutElement = document.getElementById("about-section");
+      if (aboutElement) {
+        aboutElement.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      } else if (aboutSectionRef.current) {
+        aboutSectionRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    } else if (section === "contact") {
+      alert("Contact page coming soon!");
+    }
+  };
 
   const handleLoginClick = () => {
     window.scrollTo(0, 0);
@@ -73,13 +143,13 @@ const LandingPage = () => {
 
   const handleOffice365Submit = async (e) => {
     e.preventDefault();
-    
+
     const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('email', office365Email)
+      .from("users")
+      .select("*")
+      .eq("email", office365Email)
       .single();
-    
+
     if (error || !data) {
       setError("Invalid email or password");
     } else if (data.password !== office365Password) {
@@ -88,7 +158,7 @@ const LandingPage = () => {
       localStorage.setItem("user", JSON.stringify(data));
       localStorage.setItem("isLoggedIn", "true");
       handleClosePopup();
-      
+
       if (data.role === "admin") {
         navigate("/admin-dashboard");
       } else {
@@ -121,13 +191,13 @@ const LandingPage = () => {
 
   const handleAdminSubmit = async (e) => {
     e.preventDefault();
-    
+
     const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('email', username)
+      .from("users")
+      .select("*")
+      .eq("email", username)
       .single();
-    
+
     if (error || !data) {
       setError("Invalid credentials");
     } else if (data.password !== password) {
@@ -154,19 +224,50 @@ const LandingPage = () => {
     alert("Report Found Item - Coming soon!");
   };
 
+  const handleLearnMore = () => {
+    alert(
+      "STI College Lost and Found System\n\nThis system helps students and staff report lost or found items within the campus. It aims to create a more organized and efficient way of returning lost belongings to their owners.\n\nFeatures:\n• Report lost items\n• Report found items\n• Claim your lost items\n• Real-time notifications\n• Secure verification process",
+    );
+  };
+
+  const handleContactUs = () => {
+    alert(
+      "Contact Us\n\nSTI College\nEmail: lostandfound@sti.edu\nPhone: (02) 1234-5678\nAddress: STI College Campus",
+    );
+  };
+
   return (
     <>
-      <div className={`full-width-wrapper ${showLoginPopup ? "blur-background" : ""}`}>
+      <div
+        className={`full-width-wrapper ${showLoginPopup ? "blur-background" : ""}`}
+      >
         <header className="full-header">
           <div className="header-content">
             <div className="logo">
               <img src={founduLogo} alt="FoundU" className="logo-img" />
             </div>
             <div className="nav-center">
-              <span className="lang">Home</span>
-              <span className="lang">About</span>
-              <span className="lang">Contact</span>
-              <span className="lang" onClick={handleBrowseClick}>Browse</span>
+              <span
+                className={`lang ${activeSection === "home" ? "active" : ""}`}
+                onClick={() => scrollToSection("home")}
+              >
+                Home
+              </span>
+              <span
+                className={`lang ${activeSection === "about" ? "active" : ""}`}
+                onClick={() => scrollToSection("about")}
+              >
+                About
+              </span>
+              <span
+                className={`lang ${activeSection === "contact" ? "active" : ""}`}
+                onClick={() => scrollToSection("contact")}
+              >
+                Contact
+              </span>
+              <span className="lang" onClick={handleBrowseClick}>
+                Browse
+              </span>
             </div>
             <div className="header-actions">
               <button className="login-btn" onClick={handleLoginClick}>
@@ -176,7 +277,7 @@ const LandingPage = () => {
           </div>
         </header>
 
-        <div className="hero-section">
+        <div className="hero-section" ref={homeSectionRef}>
           <h1 className="hero-title">
             Where lost belongings find
             <br />
@@ -194,6 +295,30 @@ const LandingPage = () => {
             <button className="hero-btn lost-btn" onClick={handleLostClick}>
               I've lost something
             </button>
+          </div>
+        </div>
+
+        <div id="about-section" className="about-section" ref={aboutSectionRef}>
+          <div className="about-container">
+            <h2 className="about-title">About Us</h2>
+            <p className="about-text">
+              STI College's Lost and Found System is dedicated to helping
+              students, faculty, and staff reunite with their lost belongings.
+              With technological support, FoundU aims to create a more caring
+              environment, promote mutual assistance, and strengthen solidarity
+              within the STI community.
+            </p>
+            <div className="about-buttons">
+              <button className="about-btn learn-btn" onClick={handleLearnMore}>
+                Learn More
+              </button>
+              <button
+                className="about-btn contact-btn"
+                onClick={handleContactUs}
+              >
+                Contact Us
+              </button>
+            </div>
           </div>
         </div>
       </div>

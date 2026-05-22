@@ -2,7 +2,7 @@ import React from "react";
 import "./LoginPopup.css";
 
 const LoginPopup = ({
-  isClosing,       
+  isClosing,
   handleClosePopup,
   showAdminForm,
   showOffice365Form,
@@ -21,36 +21,35 @@ const LoginPopup = ({
   setOffice365Password,
   error,
   rememberMe,
-  setRememberMe
+  setRememberMe,
 }) => {
   return (
     <div className={`popup-overlay ${isClosing ? "closing" : ""}`}>
       <div className="popup-container">
         <div className="popup-header">
           <h2>
-            {showOffice365Form 
-              ? "Office 365 Login" 
-              : showAdminForm 
-                ? "Admin Login" 
+            {showOffice365Form
+              ? "Office 365 Login"
+              : showAdminForm
+                ? "Admin Login"
                 : "Log in"}
           </h2>
-          <button className="close-btn" onClick={handleClosePopup}>×</button>
+          <button className="close-btn" onClick={handleClosePopup}>
+            ×
+          </button>
         </div>
-        
+
         <div className="form-switch-wrapper">
           {!showAdminForm && !showOffice365Form ? (
             <div className="login-options">
-              <button 
+              <button
                 className="office365-btn"
                 onClick={handleShowOffice365Form}
               >
                 <span className="office-icon"></span>
                 Login with Office 365
               </button>
-              <button 
-                className="admin-link"
-                onClick={handleShowAdminForm}
-              >
+              <button className="admin-link" onClick={handleShowAdminForm}>
                 Admin Login
               </button>
             </div>
@@ -83,8 +82,14 @@ const LoginPopup = ({
                 />
               </div>
               {error && <div className="error-message">{error}</div>}
-              <button type="submit" className="submit-btn">Login</button>
-              <button type="button" className="back-btn" onClick={handleBackToOptions}>
+              <button type="submit" className="student-submit-btn">
+                Login
+              </button>
+              <button
+                type="button"
+                className="back-btn"
+                onClick={handleBackToOptions}
+              >
                 Back
               </button>
             </form>
@@ -127,8 +132,14 @@ const LoginPopup = ({
                 </label>
               </div>
               {error && <div className="error-message">{error}</div>}
-              <button type="submit" className="submit-btn">Login</button>
-              <button type="button" className="back-btn" onClick={handleBackToOptions}>
+              <button type="submit" className="admin-submit-btn">
+                Login
+              </button>
+              <button
+                type="button"
+                className="back-btn"
+                onClick={handleBackToOptions}
+              >
                 Back
               </button>
             </form>
